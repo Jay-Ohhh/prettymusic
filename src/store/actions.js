@@ -1,0 +1,77 @@
+import { shuffle } from '../utils/untils'
+import {
+  saveSearch,
+  deleteSearch,
+  clearSearch,
+  saveHistory,
+  deleteHistory,
+  clearHistory,
+} from '../utils/cache'
+
+function findIndex(list, song) {
+  return list.findeIndex(item => item.id === song.id)
+}
+
+export default {
+  // 选择播放
+  // 第二个参数是解构赋值的形式，对payload进行解构
+  selectPlay(context, { list, index }) {
+    context.commit('setSequenceList', list)
+    if (context.state.mode === context.state.playMode.random) {
+      let randomList = shuffle(list)
+      context.commit('setPlayList', randomList)
+      // 歌曲在随机列表中的索引
+      index = findIndex(randomList, list[index])
+    } else {
+      context.commit('setPlayList', list)
+    }
+    context.commit('setCurrentIndex', index)
+    // state.playList[state.currentIndex]就是当前播放歌曲，在getters中
+    context.commit('setPlaying', true)
+  },
+  // 播放全部
+  playAll(context, { list }) {
+    context.commit('setPlayMode', context.state.playMode.sequence)
+    context.commit('setSequenceList', list)
+    context.commit('setPlayList', list)
+    context.commit('setCurrentIndex', 0)
+    context.commit('setPlaying', true)
+  },
+  // 暂停播放
+  pausePlay(context) {
+    context.commit('setPlaying', false)
+  },
+  // 移除播放
+  stopPlay(context) {
+    context.commit('setPlaying', false)
+    context.commit('setPlayList', [])
+    context.commit('setSequenceList', [])
+    context.commit('setCurrentIndex', -1)
+  },
+  // 保存单个搜索关键词到搜索历史
+  saveSearchKey(context, query) {
+    context.commit('setSearchHistory', saveSearch(query))
+  },
+  // 删除单个搜索关键词
+  deleteSearchKey(context, query) {
+    context.commit('setSearchHistory', deleteSearch(query))
+  },
+  // 移除全部搜索历史
+  clearSearchHistory(context) {
+    // 为什么第二个参数不直接传入空数组？
+    // 因为还需要通过clearSearch()清空sessionStorage的搜索历史数组
+    context.commit('setSearchHistory', clearSearch())
+  },
+  // 添加到最近播放列表
+  saveHistoryList(context, song) {
+    context.commit('setHistoryList', saveHistory(song))
+  },
+  // 从最近播放列表删除
+  deleteOneHistory(context, song) {
+    context.commit('setHistoryList', deleteHistory(song))
+  },
+  // 移除全部最近播放
+  clearHistoryList(context) {
+    context.commit('setHistoryList', clearHistory())
+  },
+}
