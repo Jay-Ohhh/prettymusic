@@ -20,11 +20,10 @@ export default {
       // 播放进度
       playProgress: 0,
       // 用以存储按下鼠标时某些属性的对象
-      touch: {},
-      // 进度按钮的宽度
-      progressBtnWidth: 0,
-      // 进度条的总长度
-      progressBarWidth: 0
+      touch: {
+        // 鼠标按下的标志
+        initiated: false
+      }
     }
   },
   props: {
@@ -38,14 +37,6 @@ export default {
       this.setProgressWidthBySong(newVal)
     }
   },
-  mounted() {
-    // 进度栏的总长度
-    this.progressBarWidth = this.$refs.progressBar.clientWidth
-    // 按钮的宽度，因为点击或者经过时，按钮会变大，我们需要的是正常状态下按钮的大小
-    this.progressBtnWidth = this.$refs.progressBtn.offsetWidth
-    // 进度条最大的长度 = 进度栏的总长度 - 按钮的宽度
-    this.progressMaxWidth = this.progressBarWidth - this.progressBtnWidth
-  },
   methods: {
     // 鼠标放开
     progressMouseUp(e) {
@@ -58,12 +49,11 @@ export default {
         // 拖动结束
         this.touch.initiated = false
         // 改变播放进度
-        this.triggerPercent()
+        this.changePercent()
       }
     },
     // 鼠标按下
     progressMouseDown(e) {
-      console.log(e)
       // 拖动开始
       this.touch.initiated = true
       // 以Document 对象（即文本窗口）左上角为原点，定位x轴坐标
@@ -71,20 +61,31 @@ export default {
       // clientWidth获取元素除边框外的宽度，返回值不带单位
       // 获取已播放进度条的已播放长度
       this.touch.left = this.$refs.progress.clientWidth
-      console.log(this.$refs.progress)
+
+      // 页面布局可能会因为拖动发生变化
+      // 进度栏的总长度是弹性布局，即进度栏的总长度会发生变化，而mounted只执行一次，因此不能写在mounted()
+      // 进度栏的总长度
+      let progressBarWidth = this.$refs.progressBar.clientWidth
+      // 按钮的宽度，因为点击或者经过时，按钮会变大，我们需要的是正常状态下按钮的大小
+      // 以下的方法好像获取的就是正常状态下按钮的大小，无法获取hover状态下按钮的大小
+      let progressBtnWidth = this.$refs.progressBtn.offsetWidth
+      console.log(progressBtnWidth)
+      // 进度条最大的长度 = 进度栏的总长度 - 按钮的宽度
+      let progressMaxWidth = progressBarWidth - progressBtnWidth
+
       document.onmousemove = e => {
         // 拖动鼠标，鼠标在x轴上的变化量，可正可负
         const deltaX = e.pageX - this.touch.startX
         // 已播放进度的长度，不计入按钮自身的大小
         const progressWidth = Math.min(
           // 进度栏的总长度-按钮的长度，是已播放进度的最大值
-          this.progressBarWidth - this.progressBtnWidth,
+          progressMaxWidth,
           // 第二个参数：已播放的长度+拖动鼠标的长度，是已播放进度的最小值
           Math.max(0, this.touch.left + deltaX)
         )
+        // 如果拖动了鼠标
+        if (progressWidth >= 0) this.setProgressWidth(progressWidth)
       }
-      // 如果拖动了鼠标
-      if (offsetWidth >= 0) this.setProgressWidth(progressWidth)
     },
     // 设置已播放进度条长度
     setProgressWidth(progressWidth) {
@@ -92,7 +93,11 @@ export default {
     },
     // 获取播放进度（ 已播放进度长度/进度条总长度 ）
     getPercent() {
-      return this.$refs.progress.clientWidth / this.progressMaxWidth
+      return (
+        this.$refs.progress.clientWidth /
+        (this.$refs.progressBar.clientWidth -
+          this.$refs.progressBtn.offsetWidth)
+      )
     },
     // 改变播放进度
     changePercent() {
@@ -108,9 +113,11 @@ export default {
       // 鼠标相对于页面的横坐标 - 进度栏的相对于页面的横坐标 - 按钮的一半长度
       // 由于布局因素，进度栏的相对于页面的横坐标  等于 其相对于视口的位置
       const rect = this.$refs.progressBar.getBoundingClientRect()
+      // 按钮的宽度，因为点击或者经过时，按钮会变大，我们需要的是正常状态下按钮的大小
+      // 以下的方法好像获取的就是正常状态下按钮的大小，无法获取hover状态下按钮的大小
+      let progressBtnWidth = this.$refs.progressBtn.offsetWidth
       // 已播放进度的长度，rect.left:元素相对于视口的x坐标
-      const progressWidth =
-        e.pageX - rect.left - left - this.progressBtnWidth / 2
+      const progressWidth = e.pageX - rect.left - left - progressBtnWidth / 2
       this.setProgressWidth(progressWidth)
       this.changePercent()
     },
@@ -118,7 +125,14 @@ export default {
     setProgressWidthBySong(percent) {
       // 有在播放且没有点击或拖动鼠标
       if (percent >= 0 && this.touch.initiated === false) {
-        this.setProgressWidth(this.progressMaxWidth * percent)
+        // 进度栏的总长度
+        let progressBarWidth = this.$refs.progressBar.clientWidth
+        // 按钮的宽度，因为点击或者经过时，按钮会变大，我们需要的是正常状态下按钮的大小
+        // 以下的方法好像获取的就是正常状态下按钮的大小，无法获取hover状态下按钮的大小
+        let progressBtnWidth = this.$refs.progressBtn.offsetWidth
+        // 进度条最大的长度 = 进度栏的总长度 - 按钮的宽度
+        let progressMaxWidth = progressBarWidth - progressBtnWidth
+        this.setProgressWidth(progressMaxWidth * percent)
       }
     }
   }
@@ -156,26 +170,25 @@ export default {
         top: -4.5px;
         right: -12px;
         z-index: 10;
-        width: 8px;
-        height: 8px;
+        width: 12px;
+        height: 12px;
         border-radius: 50%;
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
         -webkit-box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-        background-color: #fff;
-        outline: #fa2800 solid 4px;
+        background-color: #fa2800;
         transition: transform 0.3s;
-        // &:after {
-        //   content: '';
-        //   position: absolute;
-        //   top: 50%;
-        //   left: 50%;
-        //   width: 8px;
-        //   height: 8px;
-        //   border-radius: 50%;
-        //   transform: translate(-50%, -50%);
-        //   -webkit-transform: translate(-50%, -50%);
-        //   background-color: #fff;
-        // }
+        &:after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          transform: translate(-50%, -50%);
+          -webkit-transform: translate(-50%, -50%);
+          background-color: #fff;
+        }
         &:hover {
           transform: scale(1.2);
           -webkit-transform: scale(1.2);

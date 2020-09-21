@@ -1,5 +1,7 @@
 import Vue from 'vue'
 
-import { Image } from 'element-ui'
+import { Image, Slider, Tooltip } from 'element-ui'
 
 Vue.use(Image)
+Vue.use(Slider)
+Vue.use(Tooltip)

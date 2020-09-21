@@ -52,7 +52,7 @@ export function clearSearch() {
 
 // 添加到最近播放列表
 export function saveHistory(song) {
-  let songs = JSON.parse(sessionStorage.getItem('search')) || []
+  let songs = JSON.parse(sessionStorage.getItem('history')) || []
   insertArray(songs, song, item => item.id === song.id, HISTORY_MAX_LENGTH)
   sessionStorage.setItem('history', JSON.stringify(songs))
   return songs
@@ -60,7 +60,7 @@ export function saveHistory(song) {
 
 // 从最近播放列表移除
 export function deleteHistory(song) {
-  let songs = JSON.parse(sessionStorage.getItem('search')) || []
+  let songs = JSON.parse(sessionStorage.getItem('history')) || []
   deleteFromArray(songs, item => song.id === item.id)
   sessionStorage.setItem('history', JSON.stringify(songs))
   return songs

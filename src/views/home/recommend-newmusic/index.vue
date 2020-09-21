@@ -35,11 +35,11 @@ export default {
     },
     // 获取歌曲详情
     async getSongDetail(ids) {
+      // 接口要求多个id需要用逗号隔开
       let idList = ids.join(',')
       const res = await this.$api.getSongDetail(idList)
       // 对数据进行整理重构
       this.newSongs = res.songs.map(item => createSong(item))
-      console.log(this.newSongs)
     }
   }
 }

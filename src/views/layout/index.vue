@@ -6,14 +6,18 @@
     <div class="main">
       <router-view></router-view>
     </div>
+    <!-- 底部播放组件 -->
+    <play-bar></play-bar>
   </div>
 </template>
 
 <script>
 import prettyHeader from '../../components/content/header/index'
+import playBar from '../../components/common/playerBar/playerBar'
 export default {
   components: {
-    prettyHeader
+    prettyHeader,
+    playBar
   }
 }
 </script>

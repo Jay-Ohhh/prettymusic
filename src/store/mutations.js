@@ -16,8 +16,8 @@ export default {
     state.sequenceList = list
   },
   // 改变播放模式
-  setPlayMode(state, mode) {
-    state.mode = mode
+  setCurrentMode(state, mode) {
+    state.currentMode = mode
   },
   // 改变历史播放列表
   setHistoryList(state, list) {

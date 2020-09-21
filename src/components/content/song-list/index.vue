@@ -30,8 +30,8 @@
           <span class="music-name ellipsis">{{item.name}}</span>
           <span class="singer ellipsis">{{item.singer}}</span>
         </div>
-        <div class="music-name">《{{item.name}}》</div>
-        <div class="duration">{{item.duration}}</div>
+        <div class="music-name ellipsis">《{{item.name}}》</div>
+        <div class="duration">{{item.duration|formatTime}}</div>
       </div>
     </div>
   </div>
@@ -79,6 +79,7 @@ export default {
   margin: 0 -15px;
   .list-item {
     flex: 50%;
+    min-width: 450px;
     padding: 0 15px;
     margin-bottom: 20px;
     transition: transform 0.6s;
@@ -153,7 +154,7 @@ export default {
       }
       & > .music-name {
         flex: 4;
-        margin-left: 80px;
+        margin: 0 20px 0 60px;
         font-weight: 700;
         cursor: text;
       }

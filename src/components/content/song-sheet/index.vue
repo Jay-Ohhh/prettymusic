@@ -32,9 +32,6 @@ export default {
         return []
       }
     }
-  },
-  mounted() {
-    console.log(this.$refs.aaa.$el)
   }
 }
 </script>

@@ -9,7 +9,7 @@ import {
 } from '../utils/cache'
 
 function findIndex(list, song) {
-  return list.findeIndex(item => item.id === song.id)
+  return list.findIndex(item => item.id === song.id)
 }
 
 export default {
@@ -17,10 +17,11 @@ export default {
   // 第二个参数是解构赋值的形式，对payload进行解构
   selectPlay(context, { list, index }) {
     context.commit('setSequenceList', list)
-    if (context.state.mode === context.state.playMode.random) {
+    // 随机则将数组的元素顺序洗牌
+    if (context.state.currentMode === context.state.playMode.random) {
       let randomList = shuffle(list)
       context.commit('setPlayList', randomList)
-      // 歌曲在随机列表中的索引
+      // 当前播放歌曲在随机列表中的索引
       index = findIndex(randomList, list[index])
     } else {
       context.commit('setPlayList', list)
@@ -31,7 +32,7 @@ export default {
   },
   // 播放全部
   playAll(context, { list }) {
-    context.commit('setPlayMode', context.state.playMode.sequence)
+    context.commit('setCurrentMode', context.state.playMode.sequence)
     context.commit('setSequenceList', list)
     context.commit('setPlayList', list)
     context.commit('setCurrentIndex', 0)
@@ -71,7 +72,9 @@ export default {
     context.commit('setHistoryList', deleteHistory(song))
   },
   // 移除全部最近播放
-  clearHistoryList(context) {
+  clearHistoryList(context, currentSong) {
     context.commit('setHistoryList', clearHistory())
+    // 清理播放列表，但要保持当前播放的歌曲，以防播放组件隐藏掉或没有歌曲信息可显示
+    context.commit('setPlayList', [currentSong])
   },
 }

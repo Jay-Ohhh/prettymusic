@@ -16,8 +16,8 @@ export default {
     return state.playing
   },
   // 获取当前播放模式
-  getMode(state) {
-    return state.mode
+  getCurrentMode(state) {
+    return state.currentMode
   },
   // 获取顺序列表,即显示的歌曲排列
   getSequenceList(state) {
