@@ -1,6 +1,6 @@
 <template>
   <!-- 歌单表格 -->
-  <div class="song-sheet" ref="aaa">
+  <div class="song-sheet">
     <div class="list-item" v-for="item in recSongs" :key="item.id">
       <a>
         <div class="img-wrapper">

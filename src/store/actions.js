@@ -17,25 +17,33 @@ export default {
   // 第二个参数是解构赋值的形式，对payload进行解构
   selectPlay(context, { list, index }) {
     context.commit('setSequenceList', list)
-    // 随机则将数组的元素顺序洗牌
+    // 随机模式则将数组的元素顺序洗牌
     if (context.state.currentMode === context.state.playMode.random) {
-      let randomList = shuffle(list)
-      context.commit('setPlayList', randomList)
+      list = shuffle(list)
       // 当前播放歌曲在随机列表中的索引
-      index = findIndex(randomList, list[index])
-    } else {
-      context.commit('setPlayList', list)
+      index = findIndex(list, list[index])
     }
+    context.commit('setPlayList', list)
     context.commit('setCurrentIndex', index)
     // state.playList[state.currentIndex]就是当前播放歌曲，在getters中
     context.commit('setPlaying', true)
   },
   // 播放全部
   playAll(context, { list }) {
-    context.commit('setCurrentMode', context.state.playMode.sequence)
+    // 顺序或单曲循环模式，直接从第一首开始
+    if (
+      context.state.currentMode === context.state.playMode.sequence ||
+      context.state.currentMode === context.state.playMode.loop
+    ) {
+      context.commit('setCurrentIndex', 0)
+    } else if (context.state.currentMode === context.state.playMode.random) {
+      list = shuffle(list)
+      context.commit('setCurrentIndex', parseInt(Math.random() * list.length))
+    }
+    // context.commit('setCurrentMode', context.state.playMode.sequence)
     context.commit('setSequenceList', list)
     context.commit('setPlayList', list)
-    context.commit('setCurrentIndex', 0)
+    // context.commit('setCurrentIndex', 0)
     context.commit('setPlaying', true)
   },
   // 暂停播放

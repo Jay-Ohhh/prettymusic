@@ -15,6 +15,10 @@ export default {
   setSequenceList(state, list) {
     state.sequenceList = list
   },
+  // 改变歌单歌曲列表
+  setSongSheet(state, list) {
+    state.songSheet = list
+  },
   // 改变播放模式
   setCurrentMode(state, mode) {
     state.currentMode = mode

@@ -2,12 +2,13 @@
   <!-- 歌曲列表 -->
   <div class="song-list">
     <div class='list-item' v-for="(item,index) in songList" :key="item.id"
-      :class="index==getCurrentIndex && getCurrentSong.id == item.id && getPlaying?'playing':''">
+      :class="getCurrentSong.id == item.id && getPlaying?'playing':''">
       <div class="item-wrapper shadow">
         <!-- 序号 -->
         <span class="index">{{index+1 | formatZero(2)}}</span>
         <!-- 播放按钮 -->
-        <i class="iconfont  nicebofang2 play-btn" @click="playSong(index)"></i>
+        <i class="iconfont  nicebofang2 play-btn"
+          @click="playSong(item,index)"></i>
         <!-- 暂停按钮 -->
         <i class="iconfont nicezanting1 pause-btn" @click="pausePlay"></i>
         <!-- 播放歌曲时的波浪形图标 -->
@@ -38,7 +39,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapMutations, mapActions, mapGetters } from 'vuex'
 export default {
   props: {
     songList: {
@@ -48,17 +49,26 @@ export default {
       }
     }
   },
-  created() {},
   computed: {
     ...mapGetters(['getCurrentIndex', 'getPlaying', 'getCurrentSong'])
   },
   methods: {
+    ...mapMutations(['setSongSheet']),
     // 播放歌曲
-    playSong(index) {
+    playSong(item, index) {
+      // 暂停时再次点击歌曲前面的播放按钮
+      if (
+        item.id === this.getCurrentSong.id &&
+        this.currentMode !== this.playMode.random
+      ) {
+        this.setPlaying(true)
+        return
+      }
       this.$store.dispatch('selectPlay', {
         list: this.songList,
         index
       })
+      this.setSongSheet(this.songList)
     },
 
     ...mapActions([
@@ -114,9 +124,8 @@ export default {
       .play-icon {
         display: none;
         flex: 0.8;
-        margin-left: 15px;
+        margin-right: 18px;
         height: 16px;
-        margin-left: 15px;
         overflow: hidden;
         .line {
           width: 2px;

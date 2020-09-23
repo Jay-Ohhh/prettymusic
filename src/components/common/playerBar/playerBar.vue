@@ -44,9 +44,10 @@
           <i class="iconfont" :class="modeIcon" @click="changeMode"></i>
         </el-tooltip>
         <!-- 打开/关闭 歌词 -->
-        <i class="iconfont nicegeci32" @click="openLyric"></i>
+        <i class="iconfont nicegeci32" @click="openOrCloseLyric"></i>
         <!-- 打开/关闭 播放列表 -->
-        <i class="iconfont nicebofangliebiao24" @click="openPlayList"></i>
+        <i class="iconfont nicebofangliebiao24"
+          @click="openOrClosePlayList"></i>
       </div>
       <!-- 播放器 -->
       <!-- playing 事件在音频/视频(audio/video)因缓冲而暂停或停止后已就绪时触发 -->
@@ -61,7 +62,7 @@
       <!-- 歌词盒子 -->
       <transition name="fade">
         <div class="lyric-box shadow" v-if="showLyric">
-          <div class="title flex-between"></div>
+          <div class="title flex-between">歌词</div>
           <!-- 歌词列表 scroll要用鼠标拖动，不能用滚轮 -->
           <scroll class="lyric" ref="lyricList"
             :data="currentLyric && currentLyric.lines">
@@ -78,18 +79,27 @@
             </div>
           </scroll>
           <!-- <div class="foot"></div> -->
+          <div class="close-icon-wrapper"><i class="close-icon"
+              @click="openOrCloseLyric"></i></div>
         </div>
       </transition>
       <!-- 播放歌曲列表盒子 最近播放 歌单列表 v-if 将historyList变成computed 根据点击赋予不同数组 -->
       <transition name="fade">
         <div class="playlist-box shadow" v-if="showPlayList">
-          <div class="title flex-between">播放列表<i class="iconfont nicelajitong"
-              @click="clearHistory"></i>
+          <div class="title flex-row">
+            <span class="tag1" :class="{active:listType==='historyList'}"
+              @click="listType='historyList'">最近播放</span>
+            <span class="tag2" :class="{active:listType==='songSheet'}"
+              @click="listType='songSheet'">当前歌单</span>
+            <i class="iconfont nicelajitong" @click="clearHistory"></i>
+          </div>
+          <div class="play-all" @click="playAllSong"><i
+              class="iconfont nicebofang2"></i><span>播放全部（共{{songList.length}}首）</span>
           </div>
           <div class="list">
             <div class="item flex-row"
               :class="getCurrentSong.id === item.id && playing ? 'playing':''"
-              v-for="(item,index) in historyList" :key="item.id">
+              v-for="(item,index) in songList" :key="item.id">
               <div class="index-container flex-center">
                 <!-- 序号 -->
                 <span class="num">{{index+1 | formatZero(2)}}</span>
@@ -103,7 +113,7 @@
                 </div>
                 <!-- 播放列表每首歌前面的播放按钮 -->
                 <i class="iconfont nicebofang2 play-btn"
-                  @click="playSong(index)"></i>
+                  @click="playSong(item,index)"></i>
                 <!-- 播放列表每首歌前面的暂停按钮 -->
                 <i class="iconfont nicezanting1 pause-btn"
                   @click="pauseSong"></i>
@@ -113,6 +123,8 @@
                 @click="deleteHistoryItem(item, index)"></i>
             </div>
           </div>
+          <div class="close-icon-wrapper"><i class="close-icon"
+              @click="openOrClosePlayList"></i></div>
         </div>
       </transition>
     </div>
@@ -156,7 +168,9 @@ export default {
       volume: 0.5,
       // element滑块调节条的默认值
       volumeNum: 30,
-      timer: null
+      timer: null,
+      // 显示最近播放还是歌单列表
+      listType: 'historyList'
     }
   },
   components: {
@@ -171,9 +185,19 @@ export default {
       'currentIndex',
       'currentMode',
       'sequenceList',
-      'historyList'
+      'historyList',
+      'songSheet'
     ]),
     ...mapGetters(['getCurrentSong']),
+    // 根据点击'最近播放'和'当前歌单'标签，改变当前列表类型listType
+    // 然后显示 最近播放列表 或者 歌单歌曲列表
+    songList() {
+      if (this.listType === 'historyList') {
+        return this.historyList
+      } else if (this.listType === 'songSheet') {
+        return this.songSheet
+      }
+    },
     // 播放/暂停按钮切换
     playIcon() {
       return this.playing ? 'nicezanting1' : 'nicebofang2'
@@ -257,7 +281,8 @@ export default {
       'deleteOneHistory',
       'clearHistoryList',
       'selectPlay',
-      'pausePlay'
+      'pausePlay',
+      'playAll'
     ]),
     // 获取歌词
     async getLyric(id) {
@@ -318,15 +343,27 @@ export default {
         this.playingLyric = txt
       }
     },
-    // 播放列表的歌曲点击播放按钮，播放歌曲
-    playSong(index) {
+    // 点击播放列表的歌曲前面的播放按钮，播放歌曲
+    playSong(item, index) {
+      // 暂停时再次点击播放列表的歌曲前面的播放按钮
+      if (
+        item.id === this.getCurrentSong.id &&
+        this.currentMode !== this.playMode.random
+      ) {
+        this.setPlaying(true)
+        return
+      }
       // 通过actions把最近播放列表根据播放模式进行数组调整，传到state的播放列表playList
       // 然后在找到该歌曲在播放列表数组的索引，传到state的currentIndex
       // 然后audio表前通过getters的getCurrentSong:state.playList[state.currentIndex].url获取到音频链接
       this.selectPlay({
-        list: this.historyList,
+        list: this.songList,
         index
       })
+    },
+    // 播放全部
+    playAllSong() {
+      this.playAll({ list: this.songList })
     },
     // 暂停播放
     pauseSong() {
@@ -386,7 +423,7 @@ export default {
         this.currentLyric.seek(0)
       }
     },
-    // 上一首
+    // 上一首,即使是单曲循环也是切换到上一首，然后再单曲循环
     preSong() {
       if (this.songReady === false) return
       // 如果播放列表只有一首
@@ -405,7 +442,7 @@ export default {
         }
       }
     },
-    // 下一首
+    // 下一首，即使是单曲循环也是切换到下一首，然后再单曲循环
     nextSong() {
       if (this.songReady === false) return
       if (this.playList.length === 1) {
@@ -424,19 +461,15 @@ export default {
       }
     },
     // 打开/关闭 播放列表
-    openPlayList() {
+    openOrClosePlayList() {
       // 歌词盒子关闭
       this.showLyric = false
       this.showPlayList = !this.showPlayList
     },
-    // 打开/关闭 歌词
-    openLyric() {
+    // 打开/关闭 歌词盒子
+    openOrCloseLyric() {
       this.showPlayList = false
       this.showLyric = !this.showLyric
-    },
-    // 关闭歌词        ###########弄个按钮关闭歌词###############################
-    closeLyric() {
-      this.showLyric = false
     },
     // 拖动进度条，改变播放进度，参数percent从子组件传过来
     changePercent(percent) {
@@ -461,6 +494,12 @@ export default {
       let list = null
       if (currentMode === this.playMode.random) {
         // 应该要传入一个computed:歌单的歌曲还是历史播放
+        // 新增method:弄个播放全部，然后传入最近播放or歌单，用sequenceList接受
+        // 播放全部
+        /**
+         * 1 顺序或单曲  this.setCurrentIndex(0)
+         * 2 随机 this.setCurrentIndex(parseInt(Math.random()*this.sequenceList.length))
+         */
         list = shuffle(this.sequenceList)
       } else {
         list = this.sequenceList
@@ -622,11 +661,34 @@ export default {
     padding: 30px;
     border-radius: 3px;
     overflow: hidden;
+    .play-all {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      cursor: pointer;
+      &:hover {
+        .nicebofang2 {
+          color: #fa2800;
+          transform: scale(1.1);
+        }
+      }
+      .nicebofang2 {
+        position: relative;
+        top: 1px;
+        font-size: 24px;
+        transition: color 0.3s, transform 0.3s;
+      }
+      span {
+        margin-left: 5px;
+        font-size: 16px;
+      }
+    }
   }
   .lyric-box {
     width: 360px;
     .title {
       margin: 10px 0 30px;
+      font-size: 18px;
     }
     .lyric {
       width: 100%;
@@ -647,11 +709,62 @@ export default {
         }
       }
     }
+    .close-icon-wrapper {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 30px;
+      line-height: 25px;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      &:hover {
+        background-color: #f1f1f1;
+        .close-icon {
+          transform: scale(1.2) rotate(45deg);
+          background-color: #f1f1f1;
+        }
+      }
+      .close-icon {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-right: 1px solid #4a4a4a;
+        border-bottom: 1px solid #4a4a4a;
+        transform: rotate(45deg);
+        background-color: #fff;
+        transition: transform 0.3s, background-color 0.3s;
+      }
+    }
   }
   .playlist-box {
     width: 460px;
     .title {
+      margin: 10px 0 25px;
+      font-size: 16px;
+      .tag1,
+      .tag2 {
+        position: relative;
+        cursor: pointer;
+        &.active {
+          color: #fa2800;
+        }
+        &.active::after {
+          content: '';
+          position: absolute;
+          bottom: -10px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 80%;
+          border-bottom: 2px solid #fa2800;
+        }
+      }
+      .tag2 {
+        margin-left: 25px;
+      }
       i {
+        margin-left: 220px;
         font-size: 20px;
         cursor: pointer;
         &:hover {
@@ -748,6 +861,34 @@ export default {
             display: block;
           }
         }
+      }
+    }
+    .close-icon-wrapper {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 30px;
+      line-height: 25px;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      &:hover {
+        background-color: #f1f1f1;
+        .close-icon {
+          transform: scale(1.2) rotate(45deg);
+          background-color: #f1f1f1;
+        }
+      }
+      .close-icon {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-right: 1px solid #4a4a4a;
+        border-bottom: 1px solid #4a4a4a;
+        transform: rotate(45deg);
+        background-color: #fff;
+        transition: transform 0.3s, background-color 0.3s;
       }
     }
   }
