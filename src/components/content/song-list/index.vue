@@ -22,6 +22,7 @@
         <!-- 图片 -->
         <div class="img-wrapper">
           <el-image :src="item.picUrl" lazy>
+            <!-- el-image 加载失败时内容 -->
             <div slot="error" class="image-slot">
               <i class="el-icon-picture-outline"></i>
             </div>

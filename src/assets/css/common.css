@@ -39,6 +39,19 @@
   align-items: center;
 }
 
+/* 清除浮动 */
+.clearfix:after {
+  /*伪元素是行内元素 正常浏览器清除浮动方法*/
+  content: '';
+  display: block;
+  height: 0; /*隐藏该元素*/
+  clear: both; /* 左侧和右侧均不允许出现浮动元素*/
+  visibility: hidden; /*隐藏该元素，占用空间*/
+}
+.clearfix {
+  *zoom: 1; /*ie6清除浮动的方式 *号只有IE6-IE7执行，其他浏览器不执行*/
+}
+
 /* 过渡 */
 
 .transition {
@@ -66,6 +79,7 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* shadow */

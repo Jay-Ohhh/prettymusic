@@ -25,5 +25,6 @@ module.exports = {
     'vue/no-unused-vars': 0,
     'vue/no-parsing-error': 0,
     'vue/no-unused-vars': 0,
+    'no-extra-semi': 0,
   },
 }

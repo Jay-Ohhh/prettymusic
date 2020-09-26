@@ -89,7 +89,8 @@ export default {}
     font-size: 14px;
     padding: 0 15px;
     cursor: pointer;
-    & .router-link-active::after {
+    color: #161e27;
+    &.router-link-active::after {
       content: '';
       position: absolute;
       left: 0;

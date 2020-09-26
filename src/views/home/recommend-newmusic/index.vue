@@ -47,6 +47,7 @@ export default {
 
 <style lang="scss" scoped>
 .recommend-newmusic {
+  margin-top: 30px;
   .title {
     margin-bottom: 15px;
   }

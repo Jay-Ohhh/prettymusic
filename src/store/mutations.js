@@ -27,4 +27,8 @@ export default {
   setHistoryList(state, list) {
     state.historyList = list
   },
+  // 改变歌手对象信息
+  setSinger(state, singer) {
+    state.singer = singer
+  },
 }

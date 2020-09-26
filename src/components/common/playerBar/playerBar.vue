@@ -1,7 +1,8 @@
 <template>
   <!-- vue 过渡组件 -->
   <transition name="fade">
-    <div class="player-bar shadow flex-row" v-show="playList.length>0">
+    <div class="player-bar shadow flex-row"
+      :class="{fold:showPlayerByArrow===false}" v-show="playList.length>0">
       <!-- 头像 -->
       <div class="avatar">
         <img :src="getCurrentSong.picUrl" alt="">
@@ -83,7 +84,7 @@
               @click="openOrCloseLyric"></i></div>
         </div>
       </transition>
-      <!-- 播放歌曲列表盒子 最近播放 歌单列表 v-if 将historyList变成computed 根据点击赋予不同数组 -->
+      <!-- 播放歌曲列表盒子：最近播放 歌单列表 -->
       <transition name="fade">
         <div class="playlist-box shadow" v-if="showPlayList">
           <div class="title flex-row">
@@ -127,6 +128,9 @@
               @click="openOrClosePlayList"></i></div>
         </div>
       </transition>
+      <!-- 收起/展开 播放器按钮 -->
+      <div class="fold-btn" @click="foldOrShowPlayer"><i class="fold-arrow"></i>
+      </div>
     </div>
   </transition>
 </template>
@@ -170,7 +174,10 @@ export default {
       volumeNum: 30,
       timer: null,
       // 显示最近播放还是歌单列表
-      listType: 'historyList'
+      listType: 'historyList',
+      // 控制播放器的显示与隐藏的其中一个标志
+      // 默认为true，第一次打开页面点击歌曲后才能显示播放器
+      showPlayerByArrow: true
     }
   },
   components: {
@@ -493,16 +500,9 @@ export default {
       this.setCurrentMode(currentMode)
       let list = null
       if (currentMode === this.playMode.random) {
-        // 应该要传入一个computed:歌单的歌曲还是历史播放
-        // 新增method:弄个播放全部，然后传入最近播放or歌单，用sequenceList接受
-        // 播放全部
-        /**
-         * 1 顺序或单曲  this.setCurrentIndex(0)
-         * 2 随机 this.setCurrentIndex(parseInt(Math.random()*this.sequenceList.length))
-         */
-        list = shuffle(this.sequenceList)
+        list = shuffle(this.songList)
       } else {
-        list = this.sequenceList
+        list = this.songList
       }
       this.resetCurrentIndex(list)
       this.setPlayList(list)
@@ -525,6 +525,10 @@ export default {
     // 删除单个歌曲的历史播放记录
     deleteHistoryItem(item, index) {
       this.deleteOneHistory(item)
+    },
+    // 折叠/展示 播放器
+    foldOrShowPlayer() {
+      this.showPlayerByArrow = !this.showPlayerByArrow
     }
   }
 }
@@ -553,10 +557,11 @@ export default {
   right: 0;
   left: 0;
   z-index: 999;
-  min-width: 750px;
+  min-width: 970px;
   height: 72px;
   padding: 0 10px 0 20px;
   background-color: #fff;
+  transition: transform 0.5s;
   // 头像
   .avatar {
     flex-shrink: 0;
@@ -623,15 +628,17 @@ export default {
     justify-content: center;
     align-items: center;
     margin-left: 30px;
+    padding-right: 20px;
     .volume-icon {
       font-size: 26px;
       font-weight: 700;
       cursor: pointer;
     }
     .volume {
-      flex: 1;
+      flex: 0.6;
       position: relative;
       width: 100%;
+      min-width: 50px;
       height: 2px;
       margin-left: 10px;
       border-radius: 2px;
@@ -655,7 +662,7 @@ export default {
   .lyric-box,
   .playlist-box {
     position: absolute;
-    right: 0;
+    right: 10px;
     bottom: 80px;
     height: 580px;
     padding: 30px;
@@ -687,7 +694,7 @@ export default {
   .lyric-box {
     width: 360px;
     .title {
-      margin: 10px 0 30px;
+      margin: 0 0 20px;
       font-size: 18px;
     }
     .lyric {
@@ -701,6 +708,7 @@ export default {
         .lyric-text {
           margin: 5px 0;
           line-height: 24px;
+          text-align: center;
           font-size: 14px;
           font-weight: normal;
           &.active {
@@ -892,7 +900,38 @@ export default {
       }
     }
   }
+  .fold-btn {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 25px;
+    padding: 0 20px;
+    border-left: 18px solid transparent;
+    border-right: 18px solid transparent;
+    border-bottom: 22px solid rgba(228, 227, 227, 0.5);
+    cursor: pointer;
+    .fold-arrow {
+      position: relative;
+      top: 8px;
+      display: block;
+      width: 12px;
+      height: 12px;
+      border-right: 1px solid #4a4a4a;
+      border-bottom: 1px solid #4a4a4a;
+      transform-origin: 70% 80%;
+      transform: rotate(45deg);
+      transition: transform 0.3s;
+    }
+  }
 }
-// :class="active:item.id===currentSong.id"
-// Vuex state 歌单列表
+.player-bar.fold {
+  transform: translateY(70px);
+  .fold-arrow {
+    transform-origin: 70% 80%;
+    transform: rotate(-135deg);
+  }
+}
 </style>

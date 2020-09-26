@@ -18,6 +18,8 @@ const state = {
   historyList: [],
   // 歌单里的歌曲列表，该列表显示
   songSheet: [],
+  // 歌手对象信息
+  singer: {},
   // 播放模式选项
   playMode: {
     sequence: 0, // 顺序播放

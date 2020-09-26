@@ -1,12 +1,14 @@
 <template>
   <!-- 歌单表格 -->
   <div class="song-sheet">
-    <div class="list-item" v-for="item in recSongs" :key="item.id">
+    <div class="list-item" v-for="item in recSongs" :key="item.id"
+      @click="toDetail(item)">
       <a>
         <div class="img-wrapper">
           <!-- 接口文档：图片加上 ?param=宽y高 可控制图片尺寸 -->
           <el-image :src="item.picUrl || item.coverImgUrl + '?param=300y300'"
             lazy>
+            <!-- el-image 加载失败时内容 -->
             <div slot="error" class="image-slot ">
               <i class="el-icon-picture-outline"></i>
             </div>
@@ -31,6 +33,16 @@ export default {
       default() {
         return []
       }
+    }
+  },
+  methods: {
+    toDetail(item) {
+      this.$router.push({
+        path: 'playlistdetail',
+        query: {
+          id: item.id
+        }
+      })
     }
   }
 }

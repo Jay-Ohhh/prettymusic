@@ -57,6 +57,7 @@ html {
 
 a {
   text-decoration: none;
+  color: #161e27;
 }
 
 img {
@@ -110,7 +111,6 @@ li {
 
 a {
   text-decoration: none;
-  color: #161e27;
 }
 /* abbr标签指示简称或缩写 */
 /* <acronym> 标签定义首字母缩写,HTML5 中不支持 <acronym> 标签。请使用 <abbr> 标签代替。 */

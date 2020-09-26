@@ -43,3 +43,10 @@ export const getSongDetail = ids =>
  * @params ids(支持多个 id, 用 , 隔开, eg:'347230,347231')
  */
 export const getLyric = id => request.get(`/lyric?id=${id}`)
+
+/**
+ * @method 获取热门歌手
+ */
+export function getHotSinger() {
+  return request.get('/top/artists?offset=0&limit=30')
+}
