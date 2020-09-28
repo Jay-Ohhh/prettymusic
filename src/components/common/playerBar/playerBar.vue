@@ -79,9 +79,9 @@
               <div class="no-lyric" v-else>暂无歌词，请您欣赏</div>
             </div>
           </scroll>
-          <!-- <div class="foot"></div> -->
-          <div class="close-icon-wrapper"><i class="close-icon"
-              @click="openOrCloseLyric"></i></div>
+          <!-- 关闭歌词的箭头按钮 -->
+          <div class="close-icon-wrapper" @click="openOrCloseLyric"><i
+              class="close-icon"></i></div>
         </div>
       </transition>
       <!-- 播放歌曲列表盒子：最近播放 歌单列表 -->
@@ -124,8 +124,9 @@
                 @click="deleteHistoryItem(item, index)"></i>
             </div>
           </div>
-          <div class="close-icon-wrapper"><i class="close-icon"
-              @click="openOrClosePlayList"></i></div>
+          <!-- 关闭列表的箭头按钮 -->
+          <div class="close-icon-wrapper" @click="openOrClosePlayList"><i
+              class="close-icon"></i></div>
         </div>
       </transition>
       <!-- 收起/展开 播放器按钮 -->
