@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import { routes } from './routes'
+import store from '../store/index'
 
 Vue.use(VueRouter)
 
@@ -15,6 +16,15 @@ const router = new VueRouter({
     }
     return { x: 0, y: to.meta.savedPosition || 0 }
   },
+})
+
+// 路由全局前置守卫
+router.beforeEach((to, from, next) => {
+  if (to.path === '/login') {
+    // 这里用vuex保存登录之前的页面,也可以用本地缓存sessionStorage保存
+    store.commit('setBackPath', from.fullPath)
+  }
+  next()
 })
 
 export default router

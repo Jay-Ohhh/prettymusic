@@ -1,5 +1,3 @@
-import { getSearch } from '../utils/cache'
-
 const state = {
   // 播放列表,非显示,用来给audio播放
   playList: [],
@@ -13,10 +11,10 @@ const state = {
   // 当前播放模式(循环，单曲，随机)
   currentMode: 0,
   // 搜索历史
-  searchHistory: getSearch(),
-  // 历史播放列表（最近播放），该列表显示
+  searchHistory: JSON.parse(sessionStorage.getItem('search')) || [],
+  // 历史播放列表（最近播放），该列表用来显示
   historyList: [],
-  // 歌单里的歌曲列表，该列表显示
+  // 歌单里的歌曲列表，该列表用来显示
   songSheet: [],
   // 歌手对象信息
   singer: {},
@@ -26,6 +24,12 @@ const state = {
     loop: 1, // 单曲循环
     random: 2, // 随机播放
   },
+  // 用户详情
+  userInfo: {},
+  // 是否登录
+  loginStatus: false,
+  // 去往登录页面之前的页面,用于登录后返回
+  backPath: '/',
 }
 
 export default state

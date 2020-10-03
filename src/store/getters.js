@@ -23,8 +23,20 @@ export default {
   getSequenceList(state) {
     return state.sequenceList
   },
-  // 获取搜索历史
+  // 获取历史播放列表（最近播放）
   getHistoryList(state) {
     return state.historyList
+  },
+  // 获取搜索历史
+  getSearchHistory(state) {
+    return state.searchHistory
+  },
+  // 获取登录状态
+  getLoginStatus(state) {
+    return state.loginStatus
+  },
+  // 获取用户详情
+  getUserInfo(state) {
+    return state.userInfo
   },
 }

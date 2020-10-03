@@ -2,7 +2,18 @@ const layout = () => import('../views/layout/index.vue')
 const home = () => import('../views/home/index.vue')
 const playListDetail = () => import('../views/playlistdetail/index.vue')
 const singerDetail = () => import('../views/singerdetail/index.vue')
+const login = () => import('../components/common/login/index.vue')
 const error = () => import('../views/error/404.vue')
+
+const loginRouter = {
+  path: '/login',
+  name: 'login',
+  component: login,
+  meta: {
+    title: '登录',
+    isLogin: true,
+  },
+}
 
 // 404
 const pageError = {
@@ -52,4 +63,4 @@ const appRoutes = [
   },
 ]
 
-export const routes = [pageError, ...appRoutes]
+export const routes = [loginRouter, pageError, ...appRoutes]

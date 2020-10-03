@@ -1,14 +1,14 @@
 <template>
+  <!-- 返回顶部组件 -->
   <!-- 不能用v-show,因为可能会点击到隐藏的backTop按钮 -->
   <div class="back-top" @click="backTop" v-if="showBackTop"
     @mouseenter="showTip" @mouseleave="hideTip">
     <!-- 要么用图片,要么用图标,提示可根据需要显示或隐藏（注释） -->
-    <!-- <i :class="['iconfont',bttOption.iIcon]"
-        :style="{ color: bttOption.iColor, 'font-size': bttOption.iFontsize }"></i> -->
+    <i :style="{ color: bttOption.iColor }"></i>
     <span class="tips" :class="[bttOption.iPos]"
       :style="{ color: bttOption.textColor }"
       v-show="showToolTip">{{ bttOption.text }}</span>
-    <img src="../../assets/images/gotop.png" alt="">
+    <!-- <img src="../../assets/images/gotop.png" alt=""> -->
   </div>
 </template>
 
@@ -37,20 +37,10 @@ export default {
       type: String,
       default: 'top'
     },
-    // 图标形状
-    iIcon: {
-      type: String,
-      default: 'nicebofang2'
-    },
     // 图标颜色
     iColor: {
       type: String,
       default: '#f00'
-    },
-    // 图标大小
-    iFontSize: {
-      type: String,
-      default: '32px'
     },
     // 距离y轴多少距离显示返回按钮
     pageY: {
@@ -116,9 +106,22 @@ export default {
 .back-top i {
   display: inline-block;
   position: relative;
+  width: 40px;
+  height: 40px;
   padding: 5px;
   font-size: 32px;
   text-align: center;
+  transition: all 0.3s;
+}
+.back-top i::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 10px solid currentColor;
 }
 .back-top i:hover {
   border-radius: 50%;
@@ -132,7 +135,7 @@ export default {
   white-space: nowrap;
   font-size: 12px;
   color: #000;
-  transition: all 0.3;
+  transition: all 0.3s;
 }
 .back-top .tips.left {
   top: 50%;

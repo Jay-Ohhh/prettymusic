@@ -21,7 +21,7 @@
 
 <script>
 import prettyHeader from '../../components/content/header/index'
-import playBar from '../../components/common/playerBar/PlayerBar'
+import playBar from '../../components/common/playerBar/playerBar'
 import prettyFooter from '../../components/common/Footer'
 import bgFlyCircle from '../../components/common/Bg_Fly_Circle'
 import backTop from '../../components/common/BackTop'

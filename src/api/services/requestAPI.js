@@ -50,3 +50,30 @@ export const getLyric = id => request.get(`/lyric?id=${id}`)
 export function getHotSinger() {
   return request.get('/top/artists?offset=0&limit=30')
 }
+
+/**
+ * 手机登录
+ * @param {手机号} phone
+ * @param {密码} password
+ */
+export function login(phone, password) {
+  return request.post('/login/cellphone', {
+    phone,
+    password,
+    timestamp: Date.now(),
+  })
+}
+/**
+ * 获取用户详情
+ * @param {用户id} uid
+ */
+export function getUserDetail(uid) {
+  return request.get(`/user/detail?uid=${uid}`)
+}
+
+/**
+ * 获取热搜列表(简略)
+ */
+export function getSearchHot() {
+  return request.get('/search/hot')
+}
