@@ -77,3 +77,22 @@ export function getUserDetail(uid) {
 export function getSearchHot() {
   return request.get('/search/hot')
 }
+
+/**
+ * 获取歌单分类
+ */
+export function getCateList() {
+  return request.get('/playlist/catlist')
+}
+
+/**
+ * 获取热门歌单分类
+ */
+export function getHotList() {
+  return request.get('/playlist/hot')
+}
+
+// 获取歌单（网友精选碟）
+export function getSheetList(params) {
+  return request.get('/top/playlist', { params })
+}

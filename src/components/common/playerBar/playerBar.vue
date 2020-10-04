@@ -521,7 +521,6 @@ export default {
     clearHistory() {
       // 清理播放列表，但要保持当前播放的歌曲，以防播放组件隐藏掉或没有歌曲信息可显示
       this.clearHistoryList(this.getCurrentSong)
-      console.log(this.getCurrentSong)
     },
     // 删除单个歌曲的历史播放记录
     deleteHistoryItem(item, index) {

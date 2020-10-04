@@ -4,6 +4,7 @@ const playListDetail = () => import('../views/playlistdetail/index.vue')
 const singerDetail = () => import('../views/singerdetail/index.vue')
 const login = () => import('../components/common/login/index.vue')
 const error = () => import('../views/error/404.vue')
+const playList = () => import('../views/playlist/PlayList.vue')
 
 const loginRouter = {
   path: '/login',
@@ -56,6 +57,15 @@ const appRoutes = [
         component: singerDetail,
         meta: {
           title: '歌手详情',
+          keepAlive: true,
+        },
+      },
+      {
+        path: '/playlist',
+        name: 'playlist',
+        component: playList,
+        meta: {
+          title: '歌单列表',
           keepAlive: true,
         },
       },

@@ -99,7 +99,6 @@ export default {
       this.loginLoading = true
       try {
         const res = await this.$api.login(phone, password)
-        console.log(res)
         if (res.code === 200) {
           window.sessionStorage.setItem('cookie', JSON.stringify(res.cookie))
           window.sessionStorage.setItem('token', JSON.stringify(res.token))

@@ -69,7 +69,6 @@ export default {
       // 按钮的宽度，因为点击或者经过时，按钮会变大，我们需要的是正常状态下按钮的大小
       // 以下的方法好像获取的就是正常状态下按钮的大小，无法获取hover状态下按钮的大小
       let progressBtnWidth = this.$refs.progressBtn.offsetWidth
-      console.log(progressBtnWidth)
       // 进度条最大的长度 = 进度栏的总长度 - 按钮的宽度
       let progressMaxWidth = progressBarWidth - progressBtnWidth
 

@@ -13,6 +13,8 @@ import {
   Dropdown,
   DropdownMenu,
   DropdownItem,
+  Loading,
+  Pagination,
 } from 'element-ui'
 
 Vue.use(Image)
@@ -26,6 +28,8 @@ Vue.use(Avatar)
 Vue.use(Dropdown)
 Vue.use(DropdownMenu)
 Vue.use(DropdownItem)
+Vue.use(Loading)
+Vue.use(Pagination)
 // Message不要用Vue.use，会自动触发
 Vue.component(Message.name, Message)
 
