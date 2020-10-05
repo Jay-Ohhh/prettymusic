@@ -1,5 +1,5 @@
 <template>
-  <!-- 歌单页面 -->
+  <!-- 歌单列表页面 -->
   <div class="playlist-wrap container">
     <!-- 顶部标签栏 -->
     <div class="filter shadow">
@@ -169,7 +169,7 @@ export default {
         let type = ''
         let category = ''
         let icon = ''
-        this.typeList.map(val => {
+        this.typeList.forEach(val => {
           if (val.key === obj[item].list[0].category) {
             type = val.value
             category = val.key
@@ -276,6 +276,9 @@ export default {
               }
             }
           }
+        }
+        &::-webkit-scrollbar {
+          width: 0;
         }
       }
     }
