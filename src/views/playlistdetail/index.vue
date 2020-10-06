@@ -177,39 +177,45 @@ export default {
         this.creator = res.playlist.creator
         let trackIds = res.playlist.trackIds
         // 数量超过1000，进行分割
-        let arrLength = 1000
-        let sliceArr = []
-        for (let i = 0; i < trackIds.length; i += arrLength) {
-          if (i + arrLength >= trackIds.length) {
-            sliceArr.push(trackIds.slice(i, trackIds.length))
-          } else {
-            sliceArr.push(trackIds.slice(i, i + arrLength))
-          }
-        }
-        this.getSongDetail(sliceArr)
+        // 想了一下，不用分割的，直接拿全部trackIds 请求一次 song/detail 接口获取所有歌曲的详情
+        // let arrLength = 1000
+        // let sliceArr = []
+        // for (let i = 0; i < trackIds.length; i += arrLength) {
+        //   if (i + arrLength >= trackIds.length) {
+        //     sliceArr.push(trackIds.slice(i, trackIds.length))
+        //   } else {
+        //     sliceArr.push(trackIds.slice(i, i + arrLength))
+        //   }
+        // }
+        // this.getSongDetail(sliceArr)
+        this.getSongDetail(trackIds)
       }
     },
     // 获取多首歌曲的歌曲详情
-    async getSongDetail(sliceArr) {
+    async getSongDetail(arr) {
       this.screenLoading = true
-      let before = sliceArr[0]
-      let after = sliceArr[1]
-      let beforeIds = []
-      let afterIds = []
-      before.forEach(item => beforeIds.push(item.id))
-      beforeIds = beforeIds.join(',')
-      if (after && after.length !== 0) {
-        after.forEach(item => afterIds.push(item.id))
-        afterIds = afterIds.join(',')
-        const beforeRes = await this.$api.getSongDetail(beforeIds)
-        const afterRes = await this.$api.getSongDetail(afterIds)
-        const res = beforeRes.songs.concat(afterRes.songs)
-        this.songs = this._normalizeSongs(res)
-      } else {
-        const beforeRes = await this.$api.getSongDetail(beforeIds)
-        const res = beforeRes.songs
-        this.songs = this._normalizeSongs(res)
-      }
+      // let before = arr[0]
+      // let after = arr[1]
+      // let beforeIds = []
+      // let afterIds = []
+      // before.forEach(item => beforeIds.push(item.id))
+      // beforeIds = beforeIds.join(',')
+      // if (after && after.length !== 0) {
+      //   after.forEach(item => afterIds.push(item.id))
+      //   afterIds = afterIds.join(',')
+      //   const beforeRes = await this.$api.getSongDetail(beforeIds)
+      //   const afterRes = await this.$api.getSongDetail(afterIds)
+      //   const res = beforeRes.songs.concat(afterRes.songs)
+      //   this.songs = this._normalizeSongs(res)
+      // } else {
+      //   const beforeRes = await this.$api.getSongDetail(beforeIds)
+      //   const res = beforeRes.songs
+      //   this.songs = this._normalizeSongs(res)
+      // }
+      let ids = []
+      arr.forEach(item => ids.push(item.id))
+      const res = await this.$api.getSongDetail(ids.join(','))
+      this.songs = this._normalizeSongs(res.songs)
       this.screenLoading = false
     },
     // 处理歌曲
