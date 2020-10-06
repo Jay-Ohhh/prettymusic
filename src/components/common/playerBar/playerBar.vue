@@ -92,7 +92,7 @@
               @click="listType='historyList'">最近播放</span>
             <span class="tag2" :class="{active:listType==='songSheet'}"
               @click="listType='songSheet'">当前歌单</span>
-            <i class="iconfont nicelajitong" @click="clearHistory"></i>
+            <i class="iconfont nicelajitong" @click="clearHistoryOrSheet"></i>
           </div>
           <div class="play-all" @click="playAllSong"><i
               class="iconfont nicebofang2"></i><span>播放全部（共{{songList.length}}首）</span>
@@ -121,6 +121,7 @@
               </div>
               <span class="song-name ellipsis">{{item.name}}</span>
               <i class="iconfont niceIcon_cloose"
+                v-if="!(listType==='songSheet')"
                 @click="deleteHistoryItem(item, index)"></i>
             </div>
           </div>
@@ -290,7 +291,8 @@ export default {
       'clearHistoryList',
       'selectPlay',
       'pausePlay',
-      'playAll'
+      'playAll',
+      'clearSongSheet'
     ]),
     // 获取歌词
     async getLyric(id) {
@@ -518,9 +520,14 @@ export default {
       this.currentTime = e.target.currentTime * 1000
     },
     // 清空历史播放列表
-    clearHistory() {
-      // 清理播放列表，但要保持当前播放的歌曲，以防播放组件隐藏掉或没有歌曲信息可显示
-      this.clearHistoryList(this.getCurrentSong)
+    clearHistoryOrSheet() {
+      if (this.listType === 'history') {
+        // 清理播放列表，但要保持当前播放的歌曲，以防播放组件隐藏掉或没有歌曲信息可显示
+        this.clearHistoryList(this.getCurrentSong)
+      } else if (this.listType === 'songSheet') {
+        // 清空当前歌单
+        this.clearSongSheet()
+      }
     },
     // 删除单个歌曲的历史播放记录
     deleteHistoryItem(item, index) {

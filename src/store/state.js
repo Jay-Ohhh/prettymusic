@@ -2,8 +2,8 @@ const state = {
   // 播放列表,非显示,用来给audio播放
   playList: [],
   // 顺序列表,非显示
-  // 该列表是用来接收历史播放列表或歌单列表，如果是随机模式则会利用shuffle函数将顺序列表洗牌,然后赋值给播放列表
-  sequenceList: [],
+  // 该列表是用来接收历史播放列表或歌单列表，如果是随机模式则会利用shuffle函数将顺序列表洗牌,然后赋值给playList
+  // sequenceList: [],
   // 播放状态
   playing: false,
   // 播放索引
@@ -12,9 +12,9 @@ const state = {
   currentMode: 0,
   // 搜索历史
   searchHistory: JSON.parse(sessionStorage.getItem('search')) || [],
-  // 历史播放列表（最近播放），该列表用来显示
+  // 历史播放列表（最近播放），该列表用来显示为播放列表
   historyList: [],
-  // 歌单里的歌曲列表，该列表用来显示
+  // 歌单里的歌曲列表，该列表用来显示为当前歌单
   songSheet: [],
   // 歌手对象信息
   singer: {},

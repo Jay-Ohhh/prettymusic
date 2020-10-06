@@ -43,8 +43,8 @@ Vue.filter('transNum', transNum)
  * @param {数值要显示的长度} len
  */
 export function formatZero(val, len) {
-  // 如果数值的长度大于我们规定的长度
-  if (String(val).length >= len) return val
+  // 如果数值的长度等于我们规定的长度
+  if (String(val).length === len) return val
   // 因为Array(2)的两个元素为空，join是把数组的分隔符逗号变成0，再连接所有元素变成字符串
   // Array(2).join(0) 输出 '0', Array(1).join(0) 输出 ''，因为数组只有一个元素没有逗号
   // slice(start, end) 方法可提取数组字符串的某个部分，并以新的字符串返回被提取的部分
@@ -138,3 +138,59 @@ export function shuffle(arr) {
   }
   return _arr
 }
+
+// 日期格式化
+export function formatDate(str, type) {
+  // 转换为Date对象
+  let date = new Date(str)
+  let year = date.getFullYear()
+  let month = formatZero(date.getMonth() + 1, 2)
+  let day = formatZero(date.getDate(), 2)
+  let hour = formatZero(date.getHours(), 2)
+  let minute = formatZero(date.getMinutes(), 2)
+  let second = formatZero(date.getSeconds(), 2)
+  if (type === 'YYYY-MM-DD') {
+    return `${year}-${month}-${day}`
+  } else if (type === 'YYYY-MM-DD HH:MM:SS') {
+    return `${year}-${month}-${day} ${hour}:${minute}:${second}`
+  } else if (type === 'MM/DD HH:MM:SS') {
+    return `${month}/${day} ${hour}:${minute}:${second}`
+  }
+}
+Vue.filter('formatDate', formatDate)
+
+// 时间戳转换为几分钟前，几小时前，几天前，...
+export function formatTimeBefore(dateTimeStamp) {
+  // 几分钟前，几小时前，几天前，... 的时间划分区间
+  let minuteLimit = 60 * 1000
+  let hourLimit = minuteLimit * 60
+  let dayLimit = hourLimit * 24
+  let monthLimit = dayLimit * 30
+  let yearLimit = monthLimit * 12
+  let now = new Date().getTime()
+  let difference = now - dateTimeStamp
+  if (difference <= 0 || (difference > 0 && difference < minuteLimit)) {
+    // 差值等于0或小于1分钟
+    return '刚刚'
+  } else if (difference >= minuteLimit && difference < hourLimit) {
+    // 大于等于1分钟且小于一小时
+    return parseInt(difference / minuteLimit) + '分钟前'
+  } else if (difference >= hourLimit && difference < dayLimit) {
+    // 大于等于1小时且小于一天
+    return parseInt(difference / hourLimit) + '小时前'
+  } else if (difference >= dayLimit && difference < monthLimit) {
+    // 大于等于1天且小于一个月
+    return parseInt(difference / dayLimit) + '天前'
+  } else if (difference >= monthLimit && difference < yearLimit) {
+    // 大于等于1个月且小于一年
+    return parseInt(difference / monthLimit) + '个月前'
+  } else if (difference >= yearLimit) {
+    // 大于等于1年
+    let val = difference / yearLimit
+    if (val >= 10) {
+      return '10年前'
+    }
+    return parseInt(val) + '年前'
+  }
+}
+Vue.filter('formatTimeBefore', formatTimeBefore)

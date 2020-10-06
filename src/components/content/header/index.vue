@@ -193,7 +193,7 @@ export default {
     }
   }
 }
-// 激活路由
+// 激活的路由类名(激活的标签)
 .router-link-active {
   color: #fa2800;
 }

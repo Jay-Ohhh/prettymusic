@@ -166,6 +166,25 @@
   cursor: pointer;
 }
 
+.el-button:focus,
+.el-button:hover {
+  color: #fff;
+  border-color: #f56a4e;
+  background-color: #fa846d;
+}
+
+.el-button--primary {
+  color: #fff;
+  border-color: #fa2800;
+  background-color: #fa2800;
+}
+.el-button--primary:focus {
+  background-color: #fa2800;
+}
+.el-button--primary:hover {
+  background-color: #fa5635;
+}
+
 .image-slot {
   position: absolute;
   top: 50%;

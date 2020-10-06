@@ -16,7 +16,7 @@ export default {
   // 选择播放
   // 第二个参数是解构赋值的形式，对payload进行解构
   selectPlay(context, { list, index }) {
-    context.commit('setSequenceList', list)
+    // context.commit('setSequenceList', list)
     // 随机模式则将数组的元素顺序洗牌
     if (context.state.currentMode === context.state.playMode.random) {
       list = shuffle(list)
@@ -40,10 +40,8 @@ export default {
       list = shuffle(list)
       context.commit('setCurrentIndex', parseInt(Math.random() * list.length))
     }
-    // context.commit('setCurrentMode', context.state.playMode.sequence)
-    context.commit('setSequenceList', list)
+    // context.commit('setSequenceList', list)
     context.commit('setPlayList', list)
-    // context.commit('setCurrentIndex', 0)
     context.commit('setPlaying', true)
   },
   // 暂停播放
@@ -54,7 +52,7 @@ export default {
   stopPlay(context) {
     context.commit('setPlaying', false)
     context.commit('setPlayList', [])
-    context.commit('setSequenceList', [])
+    // context.commit('setSequenceList', [])
     context.commit('setCurrentIndex', -1)
   },
   // 保存单个搜索关键词到搜索历史
@@ -84,5 +82,9 @@ export default {
     context.commit('setHistoryList', clearHistory())
     // 清理播放列表，但要保持当前播放的歌曲，以防播放组件隐藏掉或没有歌曲信息可显示
     context.commit('setPlayList', [currentSong])
+  },
+  // 将当前歌单清空
+  clearSongSheet(context) {
+    context.commit('setSongSheet', [])
   },
 }

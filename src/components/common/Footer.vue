@@ -54,11 +54,13 @@ export default {}
       color: #fff;
     }
     .desc {
+      padding: 0 10px;
       font-size: 14px;
       color: #6d7685;
     }
     .social {
       margin-top: 20px;
+      padding: 0 10px;
       a {
         position: relative;
         display: inline-block;
@@ -83,7 +85,7 @@ export default {}
     border-top: 1px solid #232a31;
     color: #6d7685;
     .container {
-      padding: 20px 0;
+      padding: 20px 10px;
       a {
         color: #5829a3;
       }

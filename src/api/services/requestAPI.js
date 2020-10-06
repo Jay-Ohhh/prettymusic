@@ -1,7 +1,8 @@
 import { request } from './axios_instance'
-// request执行后会返回一个promise对象，调用request的函数要return request返回的promise对象
+// request执行后会返回一个promise对象，调用request的函数要return request返回Promise.resolve()或Promise.reject()
 // 本项目同时支持 GET/POST 请按实际需求使用，POST请求url必须添加时间戳timestamp,使每次请求url不一样,不然请求会被缓存
-// 时间戳加的位置无要求
+// 时间戳加在url的位置无要求
+// 隐私数据用post请求
 /**
  * @method 获取轮播图
  */
@@ -27,16 +28,10 @@ export function getNewSongs() {
 
 /**
  * @method 获取歌曲详情
- * @params ids(支持多个 id, 用 , 隔开, eg:'347230,347231')
+ * @params ids(支持多个 id, 用 , 隔开, eg:ids='347230,347231')
  */
 export const getSongDetail = ids =>
   request.get('/song/detail', { params: { ids } })
-// /**
-//  * @method 获取歌曲详情
-//  * @params ids(支持多个 id, 用 , 隔开)
-//  */
-// export const getSongDetail = ids =>
-//   api.get(`/song/detail?timestamp=${time}`, {params:{ids}})
 
 /**
  * @method 获取歌曲详情
@@ -92,7 +87,56 @@ export function getHotList() {
   return request.get('/playlist/hot')
 }
 
-// 获取歌单（网友精选碟）
+/**
+ * 获取歌单（网友精选碟）
+ * @param {请求参数对象} params
+ */
 export function getSheetList(params) {
   return request.get('/top/playlist', { params })
+}
+
+/**
+ * 获取歌单详情
+ * @param {歌单id} id
+ * @param {歌单最近的 s 个收藏者,默认为8} s
+ */
+export function getPlayListDetail(id, s) {
+  return request.get('/playlist/detail', { params: { id, s } })
+}
+
+/**
+ * 获取相关歌单推荐
+ * @param {歌单id}} id
+ */
+export function getRelatedPlayList(id) {
+  return request.get(`/related/playlist?id=${id}`)
+}
+
+/**
+ * 获取歌单收藏者
+ * @param {请求参数对象} params
+ */
+export function getSubscribers(params) {
+  return request.get('/playlist/subscribers', { params })
+}
+
+/**
+ * 获取歌单评论
+ * @param {请求参数对象} params
+ */
+export function getSheetComment(params) {
+  return request.get('/comment/playlist', { params })
+}
+
+/**
+ * 收藏/取消收藏歌单
+ * @param {类型,1:收藏,2:取消收藏 } t
+ * @param {歌单 id} id
+ */
+export function collectArtist(t, id) {
+  return request.post(`/playlist/subscribe`, {
+    t,
+    id,
+    timestamp: new Date().getTime(),
+  })
 }
