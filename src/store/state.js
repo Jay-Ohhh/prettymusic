@@ -29,7 +29,7 @@ const state = {
   // 是否登录
   loginStatus: false,
   // 去往登录页面之前的页面,用于登录后返回
-  backPath: '/',
+  backPath: null,
 }
 
 export default state

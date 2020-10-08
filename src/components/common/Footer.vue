@@ -4,7 +4,7 @@
     <!-- container的样式已在common.css中写好 -->
     <div class="container">
       <p class="title">prettymusic</p>
-      <p class="desc">愿每个努力生活的人都能被岁月温柔对待，祝好！</p>
+      <p class="desc">愿每个努力生活的人都能被岁月温柔以待，祝好！</p>
       <!-- 两个图标 -->
       <div class="social flex-row">
         <router-link to="/home">

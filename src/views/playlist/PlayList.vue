@@ -30,6 +30,9 @@
           <li :class="currentCate===item.name?'active':''"
             v-for="item in hotCategories" :key="item.id"
             @click="chooseCate(item.name)">{{item.name}}</li>
+          <li class="line"></li>
+          <li :class="currentCate==='全部'?'active':''" @click="chooseCate('全部')">
+            全部</li>
         </ul>
       </div>
       <div class="type">
@@ -40,7 +43,7 @@
       </div>
     </div>
     <!-- v-loading是element loading组件（加载+遮罩层）的指令方式 fullscreen是全屏遮罩修饰符 -->
-    <song-sheet :rec-songs="sheetList" v-loading="screenLoading">
+    <song-sheet :sheet-list="sheetList" v-loading="screenLoading">
     </song-sheet>
     <div class="page-wrap">
       <el-pagination @size-change="handleSizeChange"
@@ -119,6 +122,7 @@ export default {
     },
     // 选择分类
     chooseCate(tag) {
+      if (this.currentCate === tag) return
       this.currentCate = tag
       this.getSheetList()
     },
@@ -295,6 +299,13 @@ export default {
           &.active {
             color: #fa2800;
           }
+        }
+        .line {
+          width: 1px;
+          height: 15px;
+          padding: 0;
+          background-color: #999;
+          margin: 0 10px 0 5px;
         }
       }
     }

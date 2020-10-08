@@ -6,8 +6,9 @@
       <div class="item play-item" @click="playAllSong">
         <i class="iconfont niceOutlined_Play"></i>播放全部
       </div>
-      <div class="item" :class="subscribed?'active':''" v-if="!isPerson"
-        @click="collect">
+      <!-- 如果是自己的歌单或是用户页面，则不显示收藏按钮 -->
+      <div class="item" :class="subscribed?'active':''"
+        v-if="!isPerson && $route.path!=='/personal'" @click="collect">
         <i class="iconfont niceicon-heart"></i>{{collectText}}
       </div>
     </div>
@@ -61,9 +62,8 @@
             </div>
           </td>
           <td>
-            <div class="album-container">
-              <span class="album ellipsis"
-                :title="item.album">{{item.album}}</span>
+            <div class="album-container ellipsis">
+              <span class="album" :title="item.album">{{item.album}}</span>
             </div>
           </td>
           <td>

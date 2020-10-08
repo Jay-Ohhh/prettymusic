@@ -194,3 +194,28 @@ export function formatTimeBefore(dateTimeStamp) {
   }
 }
 Vue.filter('formatTimeBefore', formatTimeBefore)
+
+// 将时间戳转换为2020年-白羊座的格式
+export function getAstro(timestamp) {
+  // 将时间戳转换为Date对象
+  let date = new Date(timestamp)
+  // 转换为这样格式的字符串 2020/10/7，没有左补零，月份是正确的，不用加1
+  let birthday = date.toLocaleDateString()
+  // split() 方法用于把一个字符串分割成字符串数组
+  let birthdayArr = birthday.split('/')
+  let year = birthdayArr[0] + '年'
+  let month = birthdayArr[1]
+  let day = birthdayArr[2]
+  // substr() 方法可在字符串中抽取从 start 下标开始的指定数目的字符。
+  // charAt() 方法用于返回指定索引处的字符
+  // true*2=2，false*2=0
+  return (
+    year +
+    '-' +
+    '魔羯水瓶双鱼白羊金牛双子巨蟹狮子处女天秤天蝎射手魔羯'.substr(
+      month * 2 - (day < '102223444433'.charAt(month - 1) - -19) * 2,
+      2,
+    ) +
+    '座'
+  )
+}

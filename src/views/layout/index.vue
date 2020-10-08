@@ -4,7 +4,8 @@
     <pretty-header></pretty-header>
     <!-- 主体区域 -->
     <div class="main">
-      <keep-alive include="singerDetail">
+      <!-- 需要考虑哪些路由keep-alive对于用户体验比较好 -->
+      <keep-alive include="singerDetail,playListDetail,personal">
         <router-view :key="$route.fullPath"></router-view>
       </keep-alive>
     </div>

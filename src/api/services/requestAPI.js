@@ -74,6 +74,15 @@ export function getSearchHot() {
 }
 
 /**
+ * 获取用户播放记录
+ * @param {用户id} id
+ * @param {type=1 时只返回 最近一周的播放记录, type=0 时返回 所有时间的播放记录} type
+ */
+export function getUserRecord(id, type) {
+  return request.get(`/user/record?uid=${id}&type=${type}`)
+}
+
+/**
  * 获取歌单分类
  */
 export function getCateList() {
@@ -139,4 +148,44 @@ export function collectArtist(t, id) {
     id,
     timestamp: new Date().getTime(),
   })
+}
+
+/**
+ * 签到
+ */
+export function signIn() {
+  // type=1是web和PC端签到
+  return request.get(`/daily_signin?type=1`)
+}
+
+/**
+ * 获取用户歌单
+ * @param {请求参数对象} params
+ */
+export function getUserArtist(params) {
+  return request.get('/user/playlist', {
+    params,
+  })
+}
+
+/**
+ * 获取用户关注列表
+ * @param {我的id} uid
+ * @param {返回数量} limit
+ */
+export function getFollows(uid, limit) {
+  return request.post('/user/follows', {
+    uid,
+    limit,
+    timestamp: new Date().getTime(),
+  })
+}
+
+/**
+ * 关注/取消关注用户
+ * @param {所关注用户的id} id
+ * @param {1为关注,其他为取消关注} t
+ */
+export function followUser(id, t) {
+  return request.post('/follow', { id, t, timestamp: new Date().getTime() })
 }

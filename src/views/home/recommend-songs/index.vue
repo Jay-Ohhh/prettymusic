@@ -2,7 +2,7 @@
   <!-- 首页推荐歌单模块 -->
   <div class="recommend-songs">
     <h2 class="title">推荐歌单</h2>
-    <song-sheet :rec-songs="recSongs"></song-sheet>
+    <song-sheet :sheet-list="recSongs"></song-sheet>
   </div>
 </template>
 

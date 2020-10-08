@@ -20,9 +20,12 @@ const router = new VueRouter({
 
 // 路由全局前置守卫
 router.beforeEach((to, from, next) => {
-  if (to.path === '/login') {
-    // 这里用vuex保存登录之前的页面,也可以用本地缓存sessionStorage保存
+  if (to.path === '/login' && from.path !== '/') {
+    // 首页的地址是'/home'
+    // 登录页面刷新：from.path是'/'，即登录页面刷新不会进行以下操作
+    // 这里用vuex和sessionStorage保存登录之前的页面
     store.commit('setBackPath', from.fullPath)
+    sessionStorage.setItem('backPath', JSON.stringify(from.fullPath))
   }
   next()
 })

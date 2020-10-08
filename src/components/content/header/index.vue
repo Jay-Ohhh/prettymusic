@@ -35,17 +35,16 @@
       </div>
       <div class="userbox">
         <!-- 登录 -->
-        <div class="login flex-row" v-if="getLoginStatus===false">
+        <div class="login flex-row" v-if="!loginStatus">
           <router-link to="/login" tag="a">登录</router-link>
         </div>
         <!-- 登录后的头像 -->
         <div class="logined flex-row" v-else>
-          <el-avatar class="avatar" :src="getUserInfo.avatarUrl"></el-avatar>
+          <el-avatar class="avatar" :src="avatarUrl"></el-avatar>
           <!-- @command点击下拉菜单项触发的事件回调 -->
           <el-dropdown trigger="click" @command="handleCommand">
             <span class="el-dropdown-link">
-              {{getUserInfo.nickname}}<i
-                class="el-icon-arrow-down el-icon--right"></i>
+              {{nickname}}<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
               <!-- command是handleCommand的参数 -->
@@ -77,7 +76,27 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getLoginStatus', 'getUserInfo'])
+    ...mapGetters(['getLoginStatus', 'getUserInfo']),
+    // 登录状态
+    loginStatus() {
+      return (
+        JSON.parse(sessionStorage.getItem('loginStatus')) || this.getLoginStatus
+      )
+    },
+    // 头像图片链接
+    avatarUrl() {
+      return (
+        JSON.parse(sessionStorage.getItem('myInfo')).avatarUrl ||
+        this.getUserInfo.avatarUrl
+      )
+    },
+    // 我的昵称
+    nickname() {
+      return (
+        JSON.parse(sessionStorage.getItem('myInfo')).nickname ||
+        this.getUserInfo.nickname
+      )
+    }
   },
   components: { searchInput },
   methods: {
@@ -85,7 +104,12 @@ export default {
     handleCommand(command) {
       if (command === 'personal') {
         this.$router.push({
-          path: '/personal'
+          path: '/personal',
+          query: {
+            id:
+              JSON.parse(sessionStorage.getItem('myInfo')).userId ||
+              this.$store.state.userInfo.userId
+          }
         })
       }
     },
@@ -186,10 +210,23 @@ export default {
     }
   }
   .logined {
+    position: relative;
     padding-left: 20px;
     cursor: pointer;
     .avatar {
       margin-right: 15px;
+    }
+    .el-dropdown-link {
+      display: inline-block;
+      max-width: 250px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      .el-icon-arrow-down {
+        position: absolute;
+        top: 20%;
+        right: -18px;
+      }
     }
   }
 }

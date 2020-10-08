@@ -36,10 +36,12 @@
             </el-form>
           </div>
           <div class="login-footer">
-            <div class="login-btn-wrap"></div>
-            <!-- loading 是否加载中状态 -->
-            <el-button class="login-btn" type="primary" :loading="loginLoading"
-              @click="login('loginForm')">登录</el-button>
+            <div class="login-btn-wrap">
+              <!-- loading 是否加载中状态 -->
+              <el-button class="login-btn" type="primary"
+                :loading="loginLoading" @click="login('loginForm')">登录
+              </el-button>
+            </div>
           </div>
         </div>
       </kinesis-element>
@@ -53,9 +55,10 @@ import { mapMutations } from 'vuex'
 export default {
   name: 'login',
   data() {
+    // 手机号的登录验证方法
     var validatePhone = (rule, value, callback) => {
       var phoneREX = /^1[3-9]\d{9}$/
-      if (phoneREX.test(value)) {
+      if (phoneREX.test(value.trim())) {
         callback()
       } else if (value === '') {
         return callback(new Error('手机号不能为空'))
@@ -106,7 +109,11 @@ export default {
           await this.getUserDetail(res.profile.userId)
           this.setLoginStatus(true)
           this.$msg.success('登录成功')
-          this.$router.push({ path: this.$store.state.backPath })
+          this.$router.push({
+            path:
+              this.$store.state.backPath ||
+              JSON.parse(sessionStorage.getItem('backPath'))
+          })
         } else {
           this.$msg.error('登录失败，请重试')
         }
@@ -125,7 +132,7 @@ export default {
         userInfo.listenSongs = res.listenSongs
         userInfo.createTime = res.createTime
         userInfo.createDays = res.createDays
-        window.sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
+        window.sessionStorage.setItem('myInfo', JSON.stringify(userInfo))
         this.setUserInfo(userInfo)
       }
     }
@@ -232,34 +239,30 @@ export default {
             border-right: 1px solid #eceff3;
           }
         }
-        .login-footer {
-          width: 100%;
+      }
+    }
+    .login-footer {
+      width: 100%;
+      padding-top: 10px;
+      .login-btn-wrap {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        border-radius: 3px;
+        overflow: hidden;
+        .login-btn {
           display: flex;
-          flex-wrap: wrap;
           justify-content: center;
-          padding-top: 10px;
-          .login-btn-wrap {
-            position: relative;
-            z-index: 1;
-            display: block;
-            width: 100%;
-            margin: 0 auto;
-            border-radius: 3px;
-            overflow: hidden;
-            .login-btn {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              width: 100%;
-              height: 42px;
-              border: 0;
-              border-radius: 3px;
-              font-size: 15px;
-              line-height: 1.5;
-              color: #fff;
-              background-color: #5dd5c8;
-            }
-          }
+          align-items: center;
+          width: 80%;
+          height: 42px;
+          border: 0;
+          border-radius: 3px;
+          font-size: 15px;
+          line-height: 1.5;
+          color: #fff;
+          background-color: #5dd5c8;
         }
       }
     }

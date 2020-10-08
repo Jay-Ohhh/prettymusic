@@ -1,8 +1,8 @@
 <template>
   <!-- 歌单表格 -->
   <div class="song-sheet">
-    <div class="list-item" v-for="item in recSongs" :key="item.id"
-      @click="toDetail(item)">
+    <div class="list-item" :class="numClass" v-for="item in sheetList"
+      :key="item.id" @click="toDetail(item)">
       <a>
         <div class="img-wrapper">
           <!-- 接口文档：图片加上 ?param=宽y高 可控制图片尺寸 -->
@@ -28,11 +28,23 @@
 <script>
 export default {
   props: {
-    recSongs: {
+    // 歌单列表
+    sheetList: {
       type: Array,
       default() {
         return []
       }
+    },
+    // 用来控制CSS样式每行占多少个歌单，目前只有8和2
+    num: {
+      type: Number,
+      default: 8
+    }
+  },
+  computed: {
+    // 用来控制CSS样式每行占多少个歌单的CSS类名，num等于8时默认样式就是显示8个
+    numClass() {
+      return this.num === 2 ? 'two' : ''
     }
   },
   methods: {
@@ -51,15 +63,21 @@ export default {
 <style lang="scss" scoped>
 .song-sheet {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
   margin: 0 -15px;
   .list-item {
     position: relative;
+    // 每行占8个
     flex: 12.5%;
     min-width: 88px;
     padding: 0 15px 20px;
     cursor: pointer;
+    &.two {
+      // 每行占2个
+      flex: 50%;
+      flex-grow: 0;
+    }
     a {
       position: relative;
       display: block;

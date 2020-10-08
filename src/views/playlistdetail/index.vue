@@ -37,7 +37,7 @@
       <!-- 左侧内容 -->
       <!-- v-loading是element loading组件（加载+遮罩层）的指令方式 fullscreen是全屏遮罩修饰符 -->
       <div class="content" v-loading="screenLoading">
-        <sheet-song-list :songs="songs" :is-person="ordered"
+        <sheet-song-list :songs="songs" :is-person="isPerson"
           @collectartist="collectArtist" :subscribed="detail.subscribed">
         </sheet-song-list>
       </div>
@@ -56,7 +56,8 @@
             </div>
           </li>
         </ul>
-        <p class="no-data-text" v-else style="padding-bottom:10px;">还没有人喜欢~</p>
+        <p class="no-data-text" v-else style="padding-bottom:10px;">
+          {{emptyText}}</p>
       </div>
       <!-- 相关推荐 -->
       <div class="related module shadow">
@@ -96,7 +97,8 @@
             </div>
           </li>
         </ul>
-        <p class="no-data-text" v-else style="padding-bottom:10px;">等你来评论~</p>
+        <p class="no-data-text" v-else style="padding-bottom:10px;">
+          {{emptyComment}}</p>
       </div>
     </div>
   </div>
@@ -104,8 +106,9 @@
 
 <script>
 import { createSong } from '../../utils/untils'
-import sheetSongList from '../../components/common/SheetSongList'
+import sheetSongList from '../../components/content/SheetSongList'
 export default {
+  name: 'playListDetail',
   data() {
     return {
       // 歌单详情
@@ -124,8 +127,12 @@ export default {
       artistId: '',
       // 遮罩并加载
       screenLoading: false,
-      // 是否自己的歌单
-      ordered: false
+      // 是否自己的歌单,如果是则不显示收藏按钮
+      isPerson: false,
+      // 没有人收藏该歌单时显示的文本
+      emptyText: '',
+      // 没有评论时显示的文本
+      emptyComment: ''
     }
   },
   components: {
@@ -141,13 +148,22 @@ export default {
       }
     }
   },
-  watch: {
-    $route(newId, oldId) {
-      if (newId && newId !== oldId) {
-        this.artistId = newId
-        this._initialize(newId)
-      }
+  created() {
+    this.artistId = this.$route.query.id
+    if (this.artistId) {
+      this._initialize(this.artistId)
     }
+  },
+  watch: {
+    // 因为设置了 <router-view :key="$route.fullPath"></router-view>
+    // url的参数发生变化，路由就会重新创建，因为不是同一路由，所以$route不会出现新值和旧值
+    // 因此不需要watch
+    // $route(newPath, oldPath) {
+    //   if (newPath && newPath !== oldPath) {
+    //     this.artistId = this.$route.query.id
+    //     this._initialize(this.artistId)
+    //   }
+    // }
   },
   methods: {
     // 点击标签跳转到歌单列表页面
@@ -176,6 +192,14 @@ export default {
         this.detail = res.playlist
         this.creator = res.playlist.creator
         let trackIds = res.playlist.trackIds
+
+        // 是否自己的歌单
+        if (sessionStorage.getItem('myInfo')) {
+          let myId = JSON.parse(sessionStorage.getItem('myInfo')).userId
+          if (this.creator.userId === myId) {
+            this.isPerson = true
+          }
+        }
         // 数量超过1000，进行分割
         // 想了一下，不用分割的，直接拿全部trackIds 请求一次 song/detail 接口获取所有歌曲的详情
         // let arrLength = 1000
@@ -214,9 +238,13 @@ export default {
       // }
       let ids = []
       arr.forEach(item => ids.push(item.id))
-      const res = await this.$api.getSongDetail(ids.join(','))
-      this.songs = this._normalizeSongs(res.songs)
-      this.screenLoading = false
+      try {
+        const res = await this.$api.getSongDetail(ids.join(','))
+        this.songs = this._normalizeSongs(res.songs)
+        this.screenLoading = false
+      } catch (e) {
+        this.screenLoading = false
+      }
     },
     // 处理歌曲
     _normalizeSongs(list) {
@@ -246,6 +274,10 @@ export default {
       const res = await this.$api.getSubscribers(params)
       if (res.code === 200) {
         this.subscribers = res.subscribers
+        // 收藏者数量为0时
+        if (res.subscribers.length === 0) {
+          this.emptyText = '还没有人喜欢~'
+        }
       }
     },
     // 获取歌单评论
@@ -259,10 +291,15 @@ export default {
       }
       const res = await this.$api.getSheetComment(params)
       if (res.code === 200) {
+        // 因为所有评论数量可能会有点多，所以有热门评论就直接显示热门评论
         if (res.hotComments.length > 0) {
           this.comments = res.hotComments
         } else {
           this.comments = res.comments
+        }
+        // 评论数量为0时
+        if (res.hotComments.length === 0 && res.comments.length === 0) {
+          this.emptyComment = '等你来评论~'
         }
       }
     },
@@ -281,36 +318,47 @@ export default {
     },
     // 收藏或取消收藏歌单，由于接口的问题，收藏与取消收藏的接口不会立即更新状态
     async collectArtist() {
-      let message = this.detail.subscribed ? '已取消收藏' : '收藏成功'
-      // 如果已收藏过该歌单
-      if (this.detail.subscribed) {
-        this.$confirm('确认取消收藏该歌单', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'info'
-        })
-          .then(async () => {
-            // t : 类型,1:收藏,2:取消收藏
-            let t = this.detail.subscribed ? 2 : 1
-            const res = await this.$api.collectArtist(t, this.artistId)
-            if (res.code === 200) {
-              this.detail.subscribed = !this.detail.subscribed
-              this.$msg.success(message)
-              // 刷新收藏者
-              this.getSubscribers(this.artistId)
-            }
+      if (
+        sessionStorage.getItem('cookie') &&
+        sessionStorage.getItem('token') &&
+        JSON.parse(sessionStorage.getItem('loginStatus'))
+      ) {
+        let message = this.detail.subscribed ? '已取消收藏' : '收藏成功'
+        // 如果已收藏过该歌单
+        if (this.detail.subscribed) {
+          this.$confirm('确认取消收藏该歌单', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'info'
           })
-          .catch(e => {})
-      } else {
-        // t : 类型,1:收藏,2:取消收藏
-        let t = this.detail.subscribed ? 2 : 1
-        const res = await this.$api.collectArtist(t, this.artistId)
-        if (res.code === 200) {
-          this.detail.subscribed = !this.detail.subscribed
-          this.$msg.success(message)
-          // 刷新收藏者
-          this.getSubscribers(this.artistId)
+            .then(async () => {
+              // t : 类型,1:收藏,2:取消收藏
+              let t = this.detail.subscribed ? 2 : 1
+              const res = await this.$api.collectArtist(t, this.artistId)
+              if (res.code === 200) {
+                this.detail.subscribed = !this.detail.subscribed
+                this.$msg.success(message)
+                // 刷新收藏者
+                this.getSubscribers(this.artistId)
+              }
+            })
+            .catch(e => {})
+        } else {
+          // t : 类型,1:收藏,2:取消收藏
+          let t = this.detail.subscribed ? 2 : 1
+          const res = await this.$api.collectArtist(t, this.artistId)
+          if (res.code === 200) {
+            this.detail.subscribed = !this.detail.subscribed
+            this.$msg.success(message)
+            // 刷新收藏者
+            this.getSubscribers(this.artistId)
+          }
         }
+      } else {
+        this.$msg('请先登录')
+        setTimeout(() => {
+          this.$router.push('/login')
+        }, 500)
       }
     },
     // 点击推荐歌单跳转到另一个歌单详情页面
@@ -335,12 +383,6 @@ export default {
       this.getRelatedPlayList(id)
       this.getSubscribers(id)
       this.getSheetComment(id)
-    }
-  },
-  created() {
-    this.artistId = this.$route.query.id
-    if (this.artistId) {
-      this._initialize(this.artistId)
     }
   }
 }
