@@ -69,14 +69,14 @@ export default {
   .list-item {
     position: relative;
     // 每行占8个
-    flex: 12.5%;
+    flex: 0 1 12.5%;
+    flex-grow: 0;
     min-width: 88px;
     padding: 0 15px 20px;
     cursor: pointer;
     &.two {
       // 每行占2个
-      flex: 50%;
-      flex-grow: 0;
+      flex: 0 1 50%;
     }
     a {
       position: relative;
@@ -122,7 +122,7 @@ export default {
 
       .list-name {
         font-size: 0.8vw;
-        font-weight: 500;
+        font-weight: 550;
         color: #333;
       }
       .count-wrapper {

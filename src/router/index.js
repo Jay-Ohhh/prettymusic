@@ -12,7 +12,9 @@ const router = new VueRouter({
   scrollBehavior(to, from, savedPosition) {
     if (from.meta.keepAlive) {
       // 在from.meta新建属性savedPosition保存离开时的位置
-      from.meta.savedPosition = document.body.scrollTop
+      // 滚动距离的兼容性
+      from.meta.savedPosition =
+        document.documentElement.scrollTop || document.body.scrollTop
     }
     return { x: 0, y: to.meta.savedPosition || 0 }
   },

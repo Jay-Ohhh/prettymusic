@@ -189,3 +189,7 @@ export function getFollows(uid, limit) {
 export function followUser(id, t) {
   return request.post('/follow', { id, t, timestamp: new Date().getTime() })
 }
+
+export function getRank() {
+  return request.get('/toplist/detail')
+}

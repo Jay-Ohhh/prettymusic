@@ -12,9 +12,9 @@ export default {
     state.playList = list
   },
   // 保存顺序列表
-  setSequenceList(state, list) {
-    state.sequenceList = list
-  },
+  // setSequenceList(state, list) {
+  //   state.sequenceList = list
+  // },
   // 保存歌单歌曲列表
   setSongSheet(state, list) {
     state.songSheet = list

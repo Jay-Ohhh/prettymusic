@@ -9,7 +9,7 @@
           <div class="background layer"
             :style="`backgroundImage:url(${userProfile.backgroundUrl})`"></div>
           <div class="card flex-row">
-            <div class="avatar">
+            <div class="avatar shadow">
               <img :src="userProfile.avatarUrl" alt="">
             </div>
             <div class="info flex-between">
@@ -350,7 +350,7 @@ export default {
             border-radius: 3px;
             img {
               width: 100%;
-              border-radius: 3px;
+              border-radius: 5px;
             }
           }
           .info {

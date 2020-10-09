@@ -6,6 +6,7 @@ const login = () => import('../components/common/login/index.vue')
 const error = () => import('../views/error/404.vue')
 const playList = () => import('../views/playlist/PlayList.vue')
 const personal = () => import('../views/personal/Personal.vue')
+const rank = () => import('../views/rank/index.vue')
 
 const loginRouter = {
   path: '/login',
@@ -76,6 +77,15 @@ const appRoutes = [
         component: personal,
         meta: {
           title: '用户',
+          keepAlive: true,
+        },
+      },
+      {
+        path: '/rank',
+        name: 'rank',
+        component: rank,
+        meta: {
+          title: '排行榜',
           keepAlive: true,
         },
       },

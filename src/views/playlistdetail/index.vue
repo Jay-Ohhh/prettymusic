@@ -36,6 +36,7 @@
       </div>
       <!-- 左侧内容 -->
       <!-- v-loading是element loading组件（加载+遮罩层）的指令方式 fullscreen是全屏遮罩修饰符 -->
+      <!-- 默认状况下，Loading 遮罩会插入到绑定元素的子节点 -->
       <div class="content" v-loading="screenLoading">
         <sheet-song-list :songs="songs" :is-person="isPerson"
           @collectartist="collectArtist" :subscribed="detail.subscribed">
@@ -241,6 +242,7 @@ export default {
       try {
         const res = await this.$api.getSongDetail(ids.join(','))
         this.songs = this._normalizeSongs(res.songs)
+        // 请求失败是不会往下执行的，所以要用try和catch，将遮罩关闭
         this.screenLoading = false
       } catch (e) {
         this.screenLoading = false

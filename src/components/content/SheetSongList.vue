@@ -139,6 +139,7 @@ export default {
     // 全部播放
     playAllSong() {
       this.playAll({ list: this.songs })
+      this.setSongSheet(this.songs)
     },
     // 收藏歌单
     collect() {

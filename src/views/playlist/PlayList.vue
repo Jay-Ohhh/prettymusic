@@ -151,12 +151,17 @@ export default {
         limit: this.limit,
         offset: this.offset
       }
-      const res = await this.$api.getSheetList(params)
-      if (res.code === 200) {
-        this.sheetList = res.playlists
-        this.sheetTotal = res.total
+      try {
+        const res = await this.$api.getSheetList(params)
+        if (res.code === 200) {
+          this.sheetList = res.playlists
+          this.sheetTotal = res.total
+        }
+        // 请求失败是不会往下执行的，所以要用try和catch，将遮罩关闭
+        this.screenLoading = false
+      } catch (e) {
+        this.screenLoading = false
       }
-      this.screenLoading = false
     },
     // 根据分类进行分组
     categoryGroup(list, field) {

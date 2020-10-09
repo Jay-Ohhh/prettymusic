@@ -404,6 +404,9 @@ export default {
       // 缓存完成或超过5s都会将this.songReady设置为true
       // 而歌曲错误，也需要将this.songReady设置为true，避免影响其他歌曲播放
       this.songReady = true
+      if (this.$msg) {
+        this.$msg('这首歌暂时没有版权~')
+      }
     },
     // 歌曲暂停
     audioPaused() {
@@ -521,7 +524,7 @@ export default {
     },
     // 清空历史播放列表
     clearHistoryOrSheet() {
-      if (this.listType === 'history') {
+      if (this.listType === 'historyList') {
         // 清理播放列表，但要保持当前播放的歌曲，以防播放组件隐藏掉或没有歌曲信息可显示
         this.clearHistoryList(this.getCurrentSong)
       } else if (this.listType === 'songSheet') {

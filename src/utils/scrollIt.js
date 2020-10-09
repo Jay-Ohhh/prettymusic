@@ -132,6 +132,7 @@ export function scrollIt(
 function checkElement() {
   // chrome,safari及一些浏览器对于documentElement的计算标准化
   // 旧版本的chrome,safari及一些浏览器documentElement.scrollTop为undefined
+  // 新版本的的chrome,safari的documentElement.scrollTop是有效的，而document.body.scrollTop是固定值0
   let element = document.documentElement.scrollTop
     ? document.documentElement
     : document.body
