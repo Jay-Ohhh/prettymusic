@@ -84,8 +84,8 @@ export default {
       scrollIt(0, 500, this.transitionName, this.showBackTopBtn)
     }
   },
-  created() {
-    // 组件一被创建，为window添加scroll事件监听器
+  mounted() {
+    // 为window添加scroll事件监听器
     window.addEventListener('scroll', this.showBackTopBtn)
   },
   beforeDestroy() {

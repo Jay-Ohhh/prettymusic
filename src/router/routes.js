@@ -7,6 +7,7 @@ const error = () => import('../views/error/404.vue')
 const playList = () => import('../views/playlist/PlayList.vue')
 const personal = () => import('../views/personal/Personal.vue')
 const rank = () => import('../views/rank/index.vue')
+const singer = () => import('../views/singer/index.vue')
 
 const loginRouter = {
   path: '/login',
@@ -86,6 +87,15 @@ const appRoutes = [
         component: rank,
         meta: {
           title: '排行榜',
+          keepAlive: true,
+        },
+      },
+      {
+        path: '/singer',
+        name: 'singer',
+        component: singer,
+        meta: {
+          title: '歌手列表',
           keepAlive: true,
         },
       },

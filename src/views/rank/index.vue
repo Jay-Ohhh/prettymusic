@@ -41,7 +41,6 @@ export default {
       this.screenLoading = true
       try {
         const res = await this.$api.getRank()
-        console.log(res)
         if (res.code === 200) {
           this.ranks = res.list
           this.featureList = res.list.slice(0, 4)

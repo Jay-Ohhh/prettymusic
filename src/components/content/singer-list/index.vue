@@ -6,9 +6,9 @@
       <div class="img-wrapper shadow">
         <el-image :src="item.img1v1Url" lazy>
           <!-- el-image 加载时占位 -->
-          <div slot="placeholder" class="image-slot flex-center">
-            <!-- 加载中<span class="dot">...</span> -->
-          </div>
+          <!-- <div slot="placeholder" class="image-slot flex-center">
+            加载中<span class="dot">...</span>
+          </div> -->
           <!-- el-image 加载失败时内容 -->
           <div slot="error" class="image-slot">
             <i class="el-icon-picture-outline" style="font-size:18px;"></i>
@@ -64,6 +64,10 @@ export default {
         position: absolute;
         top: 0;
         left: 0;
+        ::v-deep .image-slot {
+          display: flex;
+          justify-content: center;
+        }
       }
     }
     .info {

@@ -190,6 +190,17 @@ export function followUser(id, t) {
   return request.post('/follow', { id, t, timestamp: new Date().getTime() })
 }
 
+/**
+ * 获取所有榜单内容
+ */
 export function getRank() {
   return request.get('/toplist/detail')
+}
+
+/**
+ * 获取被分类的歌手列表
+ * @param {请求参数对象} params
+ */
+export function getSingers(params) {
+  return request.get('/artist/list', { params })
 }

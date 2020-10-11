@@ -51,9 +51,8 @@
               <!-- 只做了个人主页的功能 -->
               <el-dropdown-item icon="el-icon-user" command="personal">个人主页
               </el-dropdown-item>
-              <el-dropdown-item icon="el-icon-medal">我的等级</el-dropdown-item>
-              <el-dropdown-item icon="el-icon-medal">个人设置</el-dropdown-item>
-              <el-dropdown-item divided icon="el-icon-switch-button">退出登录
+              <el-dropdown-item divided icon="el-icon-switch-button"
+                command="loginOut">退出登录
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -72,23 +71,21 @@ import searchInput from '../SearchInput'
 export default {
   data() {
     return {
-      openSearch: false
+      openSearch: false,
+      loginStatus: JSON.parse(sessionStorage.getItem('loginStatus'))
     }
   },
   computed: {
     ...mapGetters(['getLoginStatus', 'getUserInfo']),
-    // 登录状态
-    loginStatus() {
-      return (
-        JSON.parse(sessionStorage.getItem('loginStatus')) || this.getLoginStatus
-      )
-    },
     // 头像图片链接
     avatarUrl() {
       return (
         JSON.parse(sessionStorage.getItem('myInfo')).avatarUrl ||
         this.getUserInfo.avatarUrl
       )
+      // 其实也可以通过判断sessionStorage有没有token和cookie,然后在created钩子发送获取用户信息的请求
+      // 用一个data的属性保存
+      // 不过上面的本地缓存方法会方便些，不需要发送请求
     },
     // 我的昵称
     nickname() {
@@ -111,6 +108,15 @@ export default {
               this.$store.state.userInfo.userId
           }
         })
+      } else if (command === 'loginOut') {
+        sessionStorage.removeItem('token')
+        sessionStorage.removeItem('cookie')
+        sessionStorage.removeItem('loginStatus')
+        this.loginStatus = false
+        sessionStorage.removeItem('myInfo')
+        this.$store.commit('setUserInfo', {})
+        this.$store.commit('setLoginStatus', false)
+        this.$forceUpdate()
       }
     },
     // 打开搜索框

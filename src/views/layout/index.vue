@@ -5,7 +5,7 @@
     <!-- 主体区域 -->
     <div class="main">
       <!-- 需要考虑哪些路由keep-alive对于用户体验比较好 -->
-      <keep-alive include="singerDetail,playListDetail,personal">
+      <keep-alive include="singerDetail,playListDetail,personal,singer">
         <router-view :key="$route.fullPath"></router-view>
       </keep-alive>
     </div>
@@ -43,7 +43,7 @@ export default {
   width: 100%;
   min-width: 970px;
   .main {
-    min-height: 1000px;
+    min-height: 900px;
     margin-top: 70px;
     padding: 20px 0;
   }
