@@ -204,3 +204,34 @@ export function getRank() {
 export function getSingers(params) {
   return request.get('/artist/list', { params })
 }
+
+/**
+ * 获取视频分类列表
+ */
+export function getVideoCategory() {
+  return request.get('/video/category/list')
+}
+
+/**
+ * 获取视频标签列表
+ */
+export function getVideoTag() {
+  return request.get('/video/group/list')
+}
+
+/**
+ * 获取全部视频列表
+ * @param {分页参数偏移量,接口限定了每请求一次只返回8个视频数据,offset加1等于偏移8个元素} offset
+ */
+export function getVideoAll(offset) {
+  return request.get(`/video/timeline/all?offset=${offset}`)
+}
+
+/**
+ *
+ * @param {标签/分类的id} id
+ * @param {分页参数偏移量，接口限定了每请求一次只返回8个视频数据,offset加1等于偏移8个元素} offset
+ */
+export function getVideoOther(id, offset) {
+  return request.get(`/video/group?id=${id}&offset=${offset}`)
+}

@@ -17,6 +17,7 @@
 <script>
 import songSheet from '../../components/content/song-sheet/index'
 export default {
+  name: 'rank',
   data() {
     return {
       // 所有榜单

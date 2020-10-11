@@ -117,11 +117,14 @@ export default {
     },
     // 选择最新或热门
     chooseType(type) {
+      // 如果是点击的是当前选项，则不用重新发送请求
+      if (this.type === type) return
       this.sortType = type
       this.getSheetList()
     },
     // 选择分类
     chooseCate(tag) {
+      // 如果是点击的是当前分类，则不用重新发送请求
       if (this.currentCate === tag) return
       this.currentCate = tag
       this.getSheetList()
@@ -223,20 +226,12 @@ export default {
     .title {
       position: relative;
       height: 100%;
-      padding: 0 5px 0 15px;
+      padding: 0 18px 0 15px;
       margin-right: 15px;
       border-radius: 5px 0 5px 5px;
       background-color: #fa2800;
       color: #fff;
       cursor: pointer;
-      &::after {
-        content: '';
-        width: 1px;
-        height: 20px;
-        margin-left: 12px;
-        background-color: #e7e7e7;
-        opacity: 0;
-      }
       & > .iconfont {
         transform: rotate(90deg);
         margin-left: 10px;
@@ -311,6 +306,7 @@ export default {
           padding: 0;
           background-color: #999;
           margin: 0 10px 0 5px;
+          cursor: default;
         }
       }
     }

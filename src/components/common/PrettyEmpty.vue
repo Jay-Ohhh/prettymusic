@@ -10,7 +10,7 @@ export default {
   props: {
     emptyText: {
       type: String,
-      default: '哎呀，这里什么都有~'
+      default: '哎呀，这里什么都没有~'
     }
   }
 }

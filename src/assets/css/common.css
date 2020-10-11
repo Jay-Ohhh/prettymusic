@@ -254,6 +254,21 @@
   color: #fa2800;
 }
 
+.el-select .el-input__inner:focus {
+  border-color: #dcdfe6;
+}
+.el-pagination__sizes .el-input .el-input__inner:hover {
+  border-color: #fa2800;
+}
+
+.el-select .el-input.is-focus .el-input__inner,
+.el-select .el-input.is-focus .el-input__inner:hover {
+  border-color: #fa2800;
+}
+.el-select-dropdown__item.selected {
+  color: #fa2800;
+}
+
 .no-data-text {
   padding-bottom: 10px;
 }

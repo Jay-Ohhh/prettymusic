@@ -1,4 +1,5 @@
 <template>
+  <!-- 歌手列表页面 -->
   <div class="singer-wrap container">
     <!-- 标签栏 -->
     <div class="filter">

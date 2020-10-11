@@ -1,11 +1,13 @@
 <template>
-  <div class="layout">
+  <!-- 布局组件，用于页面的布局（登录页面除外） -->
+  <!-- 由于视频页面的整体高度较小，因此需要用一个类名单独设置 -->
+  <div class="layout" :class="$route.path==='/video'?'layout-video':''">
     <!-- 顶部导航 -->
     <pretty-header></pretty-header>
     <!-- 主体区域 -->
     <div class="main">
       <!-- 需要考虑哪些路由keep-alive对于用户体验比较好 -->
-      <keep-alive include="singerDetail,playListDetail,personal,singer">
+      <keep-alive include="singerDetail,playListDetail,rank,personal,singer">
         <router-view :key="$route.fullPath"></router-view>
       </keep-alive>
     </div>
@@ -38,14 +40,19 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .layout {
   width: 100%;
-  min-width: 970px;
   .main {
-    min-height: 900px;
+    // 设置最小高度是为了刷新页面时对空白部分进行占位，让页脚出现在上方
+    min-height: 970px;
     margin-top: 70px;
     padding: 20px 0;
+  }
+}
+.layout.layout-video {
+  .main {
+    min-height: 600px;
   }
 }
 </style>

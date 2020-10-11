@@ -12,7 +12,7 @@
             <el-form :model="loginForm" :rules="loginRules" ref="loginForm">
               <div class="login-input">
                 <el-form-item prop="phone">
-                  <el-input class="login-text" type="text"
+                  <el-input class="login-text" type="text" ref="phone"
                     v-model="loginForm.phone" placeholder="请输入手机号" clearable>
                   </el-input>
                   <span class="login-focus"></span>
@@ -84,6 +84,9 @@ export default {
   components: {
     KinesisContainer,
     KinesisElement
+  },
+  mounted() {
+    this.$refs.phone.$el.querySelector('input').focus()
   },
   methods: {
     ...mapMutations(['setUserInfo', 'setLoginStatus']),
@@ -190,7 +193,6 @@ export default {
           font-size: 14px;
           line-height: 1.5;
           color: #666;
-          // //////////////////////////////////////////////////
           ::v-deep .el-input__inner {
             width: 100%;
             border: 0;

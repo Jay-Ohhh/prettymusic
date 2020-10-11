@@ -94,6 +94,27 @@ export function createSong(musicData) {
     score: musicData.score || '',
   })
 }
+
+// 视频数据处理
+class Video {
+  constructor({ id, nickName, name, playCount, duration, image, isLive }) {
+    this.id = id
+    this.nickName = nickName
+    this.name = name
+    this.playCount = playCount
+    this.duration = duration
+    this.image = image
+    this.isLive = isLive
+  }
+}
+export function createVideo(videoData) {
+  return new Video({
+    id: videoData.id,
+    nickName: videoData.nickName,
+    name: videoData.name,
+  })
+}
+
 // 从数据中筛选出歌手并组成数组
 function filterSinger(singerArr) {
   // 一首歌可能有多个歌手
@@ -111,6 +132,8 @@ function filterSinger(singerArr) {
  * @param {时间戳 毫秒} duration
  */
 export function formatTime(duration) {
+  // 如果传入的是非数字文本直接返回该文本，不作处理
+  if (typeof (duration * 1) !== 'number') return duration
   let m = parseInt(duration / 1000 / 60)
   let s = ((duration / 1000) % 60).toFixed(0)
   m = formatZero(m, 2)
