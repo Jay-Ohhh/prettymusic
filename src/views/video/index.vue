@@ -159,21 +159,21 @@ export default {
           arr.push({
             id: res.vid,
             nickName: res.creator.nickname,
-            name: res.title,
+            title: res.title,
             playCount: res.playTime,
             duration: res.durationms,
-            image: res.coverUrl,
+            picUrl: res.coverUrl,
             isLive: false
           })
         } else {
           arr.push({
             id: liveRes.liveRoom.liveRoomNo,
             nickName: liveRes.liveUser.nickName,
-            name: liveRes.liveRoom.title,
+            title: liveRes.liveRoom.title,
             playCount: liveRes.liveRoom.popularity,
             duration:
               liveRes.liveRoom.liveStatus == 1 ? '正在直播' : '直播已关闭',
-            image: liveRes.liveRoom.coverUrl,
+            picUrl: liveRes.liveRoom.coverUrl,
             isLive: true
           })
         }

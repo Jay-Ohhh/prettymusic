@@ -98,7 +98,7 @@ export default {
 <style>
 .back-top {
   position: fixed;
-  right: 70px;
+  right: 120px;
   bottom: 120px;
   z-index: 999;
   cursor: pointer;

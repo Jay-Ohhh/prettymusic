@@ -95,26 +95,6 @@ export function createSong(musicData) {
   })
 }
 
-// 视频数据处理
-class Video {
-  constructor({ id, nickName, name, playCount, duration, image, isLive }) {
-    this.id = id
-    this.nickName = nickName
-    this.name = name
-    this.playCount = playCount
-    this.duration = duration
-    this.image = image
-    this.isLive = isLive
-  }
-}
-export function createVideo(videoData) {
-  return new Video({
-    id: videoData.id,
-    nickName: videoData.nickName,
-    name: videoData.name,
-  })
-}
-
 // 从数据中筛选出歌手并组成数组
 function filterSinger(singerArr) {
   // 一首歌可能有多个歌手

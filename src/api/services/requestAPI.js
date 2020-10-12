@@ -235,3 +235,11 @@ export function getVideoAll(offset) {
 export function getVideoOther(id, offset) {
   return request.get(`/video/group?id=${id}&offset=${offset}`)
 }
+
+/**
+ * 获取全部mv
+ * @param {请求参数对象} params
+ */
+export function getMvAll(params) {
+  return request.get('/mv/all', { params })
+}

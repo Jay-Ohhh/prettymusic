@@ -9,6 +9,7 @@ const personal = () => import('../views/personal/Personal.vue')
 const rank = () => import('../views/rank/index.vue')
 const singer = () => import('../views/singer/index.vue')
 const video = () => import('../views/video/index.vue')
+const mv = () => import('../views/mv/index.vue')
 
 const loginRouter = {
   path: '/login',
@@ -106,7 +107,16 @@ const appRoutes = [
         component: video,
         meta: {
           title: '视频列表',
-          keepAlive: true,
+          keepAlive: false,
+        },
+      },
+      {
+        path: '/mv',
+        name: 'mv',
+        component: mv,
+        meta: {
+          title: 'mv列表',
+          keepAlive: false,
         },
       },
     ],

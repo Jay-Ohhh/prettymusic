@@ -6,7 +6,7 @@
       <li :class="item.isLive?'live':''" v-for="item in mvs" :key="item.id">
         <div class="cover" @click="toDetailOrLive(item.id,item.isLive)">
           <!-- 图片 -->
-          <el-image :src="item.image" lazy>
+          <el-image :src="item.picUrl" lazy>
             <!-- el-image 加载失败时内容 -->
             <div slot="error" class="image-slot">
               <i class="el-icon-picture-outline" style="font-size:18px;"></i>
@@ -29,7 +29,7 @@
           </div>
         </div>
         <div class="info">
-          <h2 class="title ellipsis">{{item.name}}</h2>
+          <h2 class="title ellipsis">{{item.title}}</h2>
         </div>
       </li>
     </ul>
@@ -42,6 +42,7 @@
 import prettyEmpty from '../../common/PrettyEmpty'
 export default {
   props: {
+    // 视频数据数组
     mvs: {
       type: Array,
       default() {
