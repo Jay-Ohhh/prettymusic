@@ -7,7 +7,7 @@
         <div class="progress" ref="progress"></div>
         <!-- 进度条小圆点按钮 -->
         <div class="progress-btn" ref="progressBtn" @mouseup="progressMouseUp"
-          @mousedown.prevent="progressMouseDown"></div>
+          @mousedown="progressMouseDown"></div>
       </div>
     </div>
   </div>
@@ -42,14 +42,13 @@ export default {
     progressMouseUp(e) {
       // 0：谷歌等浏览器中，如果按的是鼠标左键 e.button === 0
       // 1：IE浏览器中，如果按的是鼠标左键 e.button === 1
-      if (e.button === 0 || e.button === 1) {
+      if (this.touch.initiated && (e.button === 0 || e.button === 1)) {
         if (document.onmousemove === null) return
-        document.onmousemove = null
-        document.onmouseup = null
         // 拖动结束
         this.touch.initiated = false
         // 改变播放进度
         this.changePercent()
+        document.onmousemove = null
       }
     },
     // 鼠标按下
@@ -73,17 +72,24 @@ export default {
       let progressMaxWidth = progressBarWidth - progressBtnWidth
 
       document.onmousemove = e => {
-        // 拖动鼠标，鼠标在x轴上的变化量，可正可负
-        const deltaX = e.pageX - this.touch.startX
-        // 已播放进度的长度，不计入按钮自身的大小
-        const progressWidth = Math.min(
-          // 进度栏的总长度-按钮的长度，是已播放进度的最大值
-          progressMaxWidth,
-          // 第二个参数：已播放的长度+拖动鼠标的长度，是已播放进度的最小值
-          Math.max(0, this.touch.left + deltaX)
-        )
-        // 如果拖动了鼠标
-        if (progressWidth >= 0) this.setProgressWidth(progressWidth)
+        if (this.touch.initiated) {
+          // 拖动鼠标，鼠标在x轴上的变化量，可正可负
+          const deltaX = e.pageX - this.touch.startX
+          // 已播放进度的长度，不计入按钮自身的大小
+          const progressWidth = Math.min(
+            // 进度栏的总长度-按钮的长度，是已播放进度的最大值
+            progressMaxWidth,
+            // 第二个参数：已播放的长度+拖动鼠标的长度，是已播放进度的最小值
+            Math.max(0, this.touch.left + deltaX)
+          )
+          // 如果拖动了鼠标
+          if (progressWidth >= 0) this.setProgressWidth(progressWidth)
+          // 如果鼠标拖动超出了进度条
+          if (progressWidth >= progressMaxWidth) {
+            this.changePercent()
+            this.touch.initiated = false
+          }
+        }
       }
     },
     // 设置已播放进度条长度
@@ -151,7 +157,7 @@ export default {
     margin: 0 25px;
     border-radius: 2px;
     cursor: pointer;
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: rgba(0, 0, 0, 0.1);
     .bar-inner {
       position: absolute;
       top: 0;

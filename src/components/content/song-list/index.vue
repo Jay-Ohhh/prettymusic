@@ -51,24 +51,27 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getCurrentIndex', 'getPlaying', 'getCurrentSong'])
+    ...mapGetters([
+      'getCurrentIndex',
+      'getPlaying',
+      'getCurrentSong',
+      'getCurrentMode',
+      'getPlayMode'
+    ])
   },
   methods: {
-    ...mapMutations(['setSongSheet']),
+    ...mapMutations(['setSongSheet', 'setPlaying']),
     // 播放歌曲
     playSong(item, index) {
       // 暂停时再次点击歌曲前面的播放按钮
       if (
         item.id === this.getCurrentSong.id &&
-        this.currentMode !== this.playMode.random
+        this.getCurrentMode !== this.getPlayMode.random
       ) {
         this.setPlaying(true)
         return
       }
-      this.$store.dispatch('selectPlay', {
-        list: this.songList,
-        index
-      })
+      this.$store.dispatch('addHistoryAndPlay', item)
       this.setSongSheet(this.songList)
     },
 

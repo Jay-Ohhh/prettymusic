@@ -19,10 +19,13 @@ export default {
   getCurrentMode(state) {
     return state.currentMode
   },
-  // 获取顺序列表,即显示的歌曲排列
-  getSequenceList(state) {
-    return state.sequenceList
+  getPlayMode(state) {
+    return state.playMode
   },
+  // // 获取顺序列表,即显示的歌曲排列
+  // getSequenceList(state) {
+  //   return state.sequenceList
+  // },
   // 获取历史播放列表（最近播放）
   getHistoryList(state) {
     return state.historyList

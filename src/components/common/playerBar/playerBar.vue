@@ -92,7 +92,8 @@
               @click="listType='historyList'">最近播放</span>
             <span class="tag2" :class="{active:listType==='songSheet'}"
               @click="listType='songSheet'">当前歌单</span>
-            <i class="iconfont nicelajitong" @click="clearHistoryOrSheet"></i>
+            <i class="iconfont nicelajitong" v-if="listType==='historyList'"
+              @click="clearHistoryOrSheet"></i>
           </div>
           <div class="play-all" @click="playAllSong"><i
               class="iconfont nicebofang2"></i><span>播放全部（共{{songList.length}}首）</span>
@@ -445,7 +446,7 @@ export default {
         return
       } else {
         let index = this.currentIndex - 1
-        if (index === -1) {
+        if (index < 0) {
           index = this.playList.length - 1
         }
         this.setCurrentIndex(index)

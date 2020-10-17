@@ -13,34 +13,42 @@ function findIndex(list, song) {
 }
 
 export default {
-  // 选择播放
+  // 点击播放，用于最近列表、当前歌单的歌曲前面的播放按钮
   // 第二个参数是解构赋值的形式，对payload进行解构
   selectPlay(context, { list, index }) {
     // context.commit('setSequenceList', list)
     // 随机模式则将数组的元素顺序洗牌
     if (context.state.currentMode === context.state.playMode.random) {
+      let song = list[index]
       list = shuffle(list)
       // 当前播放歌曲在随机列表中的索引
-      index = findIndex(list, list[index])
+      index = findIndex(list, song)
     }
     context.commit('setPlayList', list)
     context.commit('setCurrentIndex', index)
     // state.playList[state.currentIndex]就是当前播放歌曲，在getters中
     context.commit('setPlaying', true)
   },
+  // 点击播放，用于首页歌曲列表歌曲前面的播放按钮
+  addHistoryAndPlay(context, song) {
+    let list = null
+    if (context.state.currentMode === context.state.playMode.random) {
+      list = shuffle(saveHistory(song))
+    } else {
+      list = saveHistory(song)
+    }
+    let index = list.findIndex(item => item.id === song.id)
+    context.commit('setHistoryList', saveHistory(song))
+    context.commit('setPlayList', list)
+    context.commit('setCurrentIndex', index)
+    context.commit('setPlaying', true)
+  },
   // 播放全部
   playAll(context, { list }) {
-    // 顺序或单曲循环模式，直接从第一首开始
-    if (
-      context.state.currentMode === context.state.playMode.sequence ||
-      context.state.currentMode === context.state.playMode.loop
-    ) {
-      context.commit('setCurrentIndex', 0)
-    } else if (context.state.currentMode === context.state.playMode.random) {
+    if (context.state.currentMode === context.state.playMode.random) {
       list = shuffle(list)
-      context.commit('setCurrentIndex', parseInt(Math.random() * list.length))
     }
-    // context.commit('setSequenceList', list)
+    context.commit('setCurrentIndex', 0)
     context.commit('setPlayList', list)
     context.commit('setPlaying', true)
   },
