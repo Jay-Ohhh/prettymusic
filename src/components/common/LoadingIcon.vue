@@ -36,20 +36,8 @@ export default {
   margin: 42px;
   background-color: #fa2800;
 }
-.loader,
-.loader:before,
-.loader:after {
+.loader {
   animation: loader 1s ease-in-out infinite;
-}
-.loader:before,
-.loader:after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
 }
 @keyframes loader {
   0% {

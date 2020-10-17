@@ -27,7 +27,7 @@
       <load-more @loadmore="loadMore">
         <mv-list :mvs="mvs"></mv-list>
       </load-more>
-      <loading-icon v-if="hasMore" :loading-text="'努力加载中~'"></loading-icon>
+      <loading-icon v-if="showLoadIcon" :loading-text="'努力加载中~'"></loading-icon>
     </div>
   </div>
 </template>
@@ -37,6 +37,7 @@ import loadMore from '../../components/common/LoadMore'
 import loadingIcon from '../../components/common/LoadingIcon'
 import mvList from '../../components/content/mv-list/index'
 export default {
+  name: 'mv',
   data() {
     return {
       // 当前地区
@@ -66,8 +67,10 @@ export default {
       },
       // mv数据数组
       mvs: [],
-      // 是否还有更多数据，是否显示加载图标
-      hasMore: false
+      // 是否还有更多数据
+      hasMore: false,
+      // 是否显示加载图标
+      showLoadIcon: false
     }
   },
   components: {
@@ -94,7 +97,6 @@ export default {
     },
     // 获取全部mv
     async getMvAll() {
-      this.hasMore = false
       const res = await this.$api.getMvAll(this.params)
       if (res.code === 200) {
         this.mvs.push(...this._normalizeVideos(res.data))
@@ -103,7 +105,7 @@ export default {
     },
     // 处理mv对象数据
     _normalizeVideos(list) {
-      let arr = []
+      const arr = []
       list.forEach(item => {
         if (item.id) {
           arr.push({
@@ -121,8 +123,15 @@ export default {
     // 触底加载更多
     loadMore() {
       if (this.hasMore) {
+        this.showLoadIcon = true
         this.params.offset += this.params.limit
         this.getMvAll()
+          .then(res => {
+            this.showLoadIcon = false
+          })
+          .catch(e => {
+            this.showLoadIcon = false
+          })
       }
     }
   }

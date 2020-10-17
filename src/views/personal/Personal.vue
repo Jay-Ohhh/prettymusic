@@ -60,6 +60,7 @@
             <router-link :to="$route.fullPath" v-if="myId === userId">个人设置
             </router-link>
             <!-- 关注该用户 -->
+            <!-- 非用户自己页面且没关注才会显示 + 关注 -->
             <div class="add-follow" v-else-if="(myId !== userId) && !followed"
               @click="followUser(1)">+ 关注</div>
             <div class="add-follow" v-else @click="followUser(0)">已关注</div>
@@ -166,17 +167,6 @@ export default {
         this.userDetail.pcSign = true
       }
     },
-    // 获取用户关注列表
-    async getFollows() {
-      if (sessionStorage.getItem('myInfo')) {
-        // 100是指获取100个所关注的用户，其实应该返回所有关注的用户，但接口不能实现返回所有关注的用户
-        const res = await this.$api.getFollows(this.myId, 100)
-        this.followed = res.follow.some(item => {
-          // 为了以防一个是字符串类型，一个是数字类型，直接用双等于号都转换为字符串类型再比较
-          return item.userId == this.userProfile.userId
-        })
-      }
-    },
     // 关注/取消关注用户
     // t : 1为关注,其他为取消关注
     async followUser(t) {
@@ -244,9 +234,11 @@ export default {
     // 获取用户信息
     async getUserDetail() {
       const res = await this.$api.getUserDetail(this.userId)
+      console.log(res, 'getUserDetail')
       if (res.code === 200) {
         this.userDetail = res
         this.userProfile = res.profile
+        this.followed = res.profile.followed
         this.age = getAstro(res.profile.birthday)
       }
     },
@@ -289,7 +281,6 @@ export default {
       this.getArea()
       this.getUserRecord()
       this.getUserArtist()
-      this.getFollows()
     },
     // 重构歌曲详情对象结构
     _normalizeSongs(list) {

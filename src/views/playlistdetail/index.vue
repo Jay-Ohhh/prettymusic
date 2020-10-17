@@ -185,6 +185,7 @@ export default {
           // ()标记一个子表达式的开始和结束位置。子表达式可以获取供以后使用。
           // | 是 "或"，g是全局匹配
           // 替换掉换行符为br标签
+          // replace方法返回一个新字符串
           res.playlist.description = res.playlist.description.replace(
             /(\r\n|\n|\r)/g,
             '<br />'

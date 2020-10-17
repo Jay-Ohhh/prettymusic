@@ -6,9 +6,10 @@
       <div class="item play-item" @click="playAllSong">
         <i class="iconfont niceOutlined_Play"></i>播放全部
       </div>
-      <!-- 如果是自己的歌单或是用户页面，则不显示收藏按钮 -->
+      <!-- 如果是自己的歌单或是用户页面或是歌手详情页面，则不显示收藏按钮 -->
       <div class="item" :class="subscribed?'active':''"
-        v-if="!isPerson && $route.path!=='/personal'" @click="collect">
+        v-if="!isPerson && $route.path!=='/personal' && $route.path!=='/singerdetail'"
+        @click="collect">
         <i class="iconfont niceicon-heart"></i>{{collectText}}
       </div>
     </div>

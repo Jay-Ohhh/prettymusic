@@ -33,13 +33,10 @@
         </div>
       </li>
     </ul>
-    <!-- test -->
-    <pretty-empty v-else></pretty-empty>
   </div>
 </template>
 
 <script>
-import prettyEmpty from '../../common/PrettyEmpty'
 export default {
   props: {
     // 视频数据数组
@@ -52,9 +49,6 @@ export default {
     type: {
       type: String
     }
-  },
-  components: {
-    prettyEmpty
   },
   methods: {
     // 跳转到视频详情或直播页面

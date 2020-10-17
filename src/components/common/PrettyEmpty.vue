@@ -1,7 +1,7 @@
 <template>
   <div class="pretty-empty">
     <img src="../../assets/images/empty.png" alt="">
-    <p>{{emptyText}}</p>
+    <p v-if="emptyText!==''">{{emptyText}}</p>
   </div>
 </template>
 
@@ -10,7 +10,7 @@ export default {
   props: {
     emptyText: {
       type: String,
-      default: '哎呀，这里什么都没有~'
+      default: ''
     }
   }
 }

@@ -3,6 +3,7 @@ import { request } from './axios_instance'
 // 本项目同时支持 GET/POST 请按实际需求使用，POST请求url必须添加时间戳timestamp,使每次请求url不一样,不然请求会被缓存
 // 时间戳加在url的位置无要求
 // 隐私数据用post请求
+// 有些请求，例如关注或取消关注用户/歌手，即使发送了POST请求且添加了时间戳，但是接口返回的数据不会立即更新，需要等待一段时间才会更新
 /**
  * @method 获取轮播图
  */
@@ -242,4 +243,53 @@ export function getVideoOther(id, offset) {
  */
 export function getMvAll(params) {
   return request.get('/mv/all', { params })
+}
+
+/**
+ * 获取歌手部分信息和热门歌曲
+ * @param {歌手id(非用户id)} id
+ */
+export function getArtists(id) {
+  return request.get(`/artists?id=${id}`)
+}
+
+/**
+ * 获取歌手专辑
+ * @param {请求参数对象} params
+ */
+export function getArtistAlbum(params) {
+  return request.get('/artist/album', { params })
+}
+
+/**
+ * 获取歌手MV
+ * @param {歌手id(非用户id)} id
+ */
+export function getArtistMv(id) {
+  return request.get(`/artist/mv?id=${id}`)
+}
+
+/**
+ * 获取歌手描述
+ * @param {歌手id(非用户id)} id
+ */
+export function getArtistDesc(id) {
+  return request.get(`/artist/desc?id=${id}`)
+}
+
+/**
+ * 获取相似歌手
+ * @param {歌手id(非用户id)} id
+ */
+export function getArtistSimi(id) {
+  return request.get(`/simi/artist?id=${id}`)
+}
+
+/**
+ * 收藏/取消收藏歌手
+ * @param {歌手id(非用户id)} id
+ * @param {1为收藏,其他为取消收藏} t
+ */
+export function followSinger(id, t) {
+  return request.post('/artist/sub', { id, t, timestamp: new Date().getTime() })
 }

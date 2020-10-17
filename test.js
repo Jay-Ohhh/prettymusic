@@ -1,4 +1,8 @@
-let reg = /(\r\n|\n|\r)/gm
-let str = 'abc\r\nabc\nabc\n'
-let str1 = str.replace(reg, '<br />')
-console.log(str1)
+let obj1 = {
+  a: 'a',
+}
+let obj2 = {
+  a: 1,
+  ...obj1, // 运算符在后
+}
+console.log(obj2) // { a: 'a' }

@@ -134,7 +134,7 @@ export default {
   display: inline-block;
   white-space: nowrap;
   font-size: 12px;
-  color: #000;
+  font-weight: 500;
   transition: all 0.3s;
 }
 .back-top .tips.left {

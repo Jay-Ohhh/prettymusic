@@ -95,7 +95,7 @@ export function createSong(musicData) {
   })
 }
 
-// 从数据中筛选出歌手并组成数组
+// 从数据中筛选出歌手并组成 张三/李四 这样的格式
 function filterSinger(singerArr) {
   // 一首歌可能有多个歌手
   // 如果歌手数组不存在

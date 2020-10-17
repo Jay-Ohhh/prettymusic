@@ -1,8 +1,8 @@
 <template>
-  <!-- 歌手列表 -->
-  <ul class="singer-list clearfix">
+  <!-- 歌手列表组件 -->
+  <ul class="singer-list clearfix" v-if="singers.length>0">
     <li class="item" v-for="item in singers" :key="item.id"
-      @click="toSinger(item)">
+      @click="toSingerDetail(item)">
       <div class="img-wrapper shadow">
         <el-image :src="item.img1v1Url" lazy>
           <!-- el-image 加载时占位 -->
@@ -34,9 +34,9 @@ export default {
     }
   },
   methods: {
-    toSinger(item) {
+    toSingerDetail(item) {
       this.$router.push({
-        path: 'singerdetail',
+        path: '/singerdetail',
         query: {
           id: item.id
         }

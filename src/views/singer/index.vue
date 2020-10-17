@@ -30,7 +30,7 @@
         <singer-list :singers="singers"></singer-list>
       </ul>
     </load-more>
-    <loading-icon v-if="hasMore" :loading-text="'努力加载中~'"></loading-icon>
+    <loading-icon v-if="showLoadIcon" :loading-text="'努力加载中~'"></loading-icon>
   </div>
 </template>
 
@@ -81,8 +81,10 @@ export default {
       },
       // 歌手列表
       singers: [],
-      // 是否还有更多数据，是否显示加载图标
-      hasMore: false
+      // 是否还有更多数据
+      hasMore: false,
+      // 是否显示加载图标
+      showLoadIcon: false
     }
   },
   components: {
@@ -131,20 +133,24 @@ export default {
     },
     // 获取歌手列表
     async getSingers() {
-      this.hasMore = false
       const res = await this.$api.getSingers(this.params)
       if (res.code === 200) {
         this.singers.push(...res.artists)
-        if (res.more) {
-          this.hasMore = true
-          this.params.offset += 40
-        }
+        this.hasMore = res.more
       }
     },
     // 触底加载更多
     loadMore() {
       if (this.hasMore) {
+        this.showLoadIcon = true
+        this.params.offset += 40
         this.getSingers()
+          .then(res => {
+            this.showLoadIcon = false
+          })
+          .catch(e => {
+            this.showLoadIcon = false
+          })
       }
     }
   }

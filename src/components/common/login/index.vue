@@ -77,6 +77,7 @@ export default {
         phone: [{ validator: validatePhone, trigger: 'blur' }],
         password: [{ required: true, message: '请输入密码！', trigger: 'blur' }]
       },
+      // 登录按钮显示加载图标
       loginLoading: false,
       parallax: 'depth'
     }
