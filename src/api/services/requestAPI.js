@@ -35,8 +35,8 @@ export const getSongDetail = ids =>
   request.get('/song/detail', { params: { ids } })
 
 /**
- * @method 获取歌曲详情
- * @params ids(支持多个 id, 用 , 隔开, eg:'347230,347231')
+ * @method 获取歌词
+ * @params {音乐id} id
  */
 export const getLyric = id => request.get(`/lyric?id=${id}`)
 

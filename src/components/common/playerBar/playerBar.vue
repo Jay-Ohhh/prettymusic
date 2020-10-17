@@ -63,7 +63,7 @@
       <!-- 歌词盒子 -->
       <transition name="fade">
         <div class="lyric-box shadow" v-if="showLyric">
-          <div class="title flex-between">歌词</div>
+          <div class="title flex-center">歌词</div>
           <!-- 歌词列表 scroll要用鼠标拖动，不能用滚轮 -->
           <scroll class="lyric" ref="lyricList"
             :data="currentLyric && currentLyric.lines">
@@ -149,7 +149,9 @@ export default {
     return {
       // 歌曲是否准备
       songReady: false,
-      // 当前播放时间,通过audio的updateTime事件监听并赋值,单位 秒
+      // 当前播放时间,单位ms
+      // 通过audio的updateTime事件监听并赋值，audio的时间单位是s赋值给currentTime时要
+      // 赋值给currentTime时要注意乘以1000
       currentTime: 0,
       // 当前歌曲对象，调用lyric-parser库创建
       currentLyric: null,
@@ -248,11 +250,11 @@ export default {
       if (this.currentLyric) {
         // 停止播放歌词
         this.currentLyric.stop()
-        // 重置为null
-        this.currentLyric = null
         this.currentTime = 0
         this.playingLyric = ''
         this.currentLyricNum = 0
+        // 重置为null
+        this.currentLyric = null
       }
       this.$nextTick(() => {
         const audio = this.$refs.audio
@@ -320,7 +322,7 @@ export default {
           } else {
             if (this.playing && this.canLyricPlay)
               // 寻找对应的开始时间的歌词
-              this.currentLyric.seek(this.currentTime * 1000)
+              this.currentLyric.seek(this.currentTime)
           }
         }
       } catch (error) {
@@ -395,7 +397,7 @@ export default {
       // 歌词对象存在且非纯音乐
       if (this.currentLyric && !this.isPureMusic) {
         // 匹配歌词时间轴，形参单位要求是毫秒
-        this.currentLyric.seek(this.currentTime * 1000)
+        this.currentLyric.seek(this.currentTime)
       }
     },
     // 歌曲错误
@@ -491,7 +493,7 @@ export default {
       this.currentTime = currentTime
       // audio.currentTime属性单位是秒
       this.$refs.audio.currentTime = currentTime / 1000
-      if (this.currentLyric) this.currentLyric.seek(currentTime * 1000)
+      if (this.currentLyric) this.currentLyric.seek(this.currentTime)
       if (this.playing === false) this.togglePlaying()
     },
     // 调节音量（使用鼠标拖曳时，只在松开鼠标后触发）

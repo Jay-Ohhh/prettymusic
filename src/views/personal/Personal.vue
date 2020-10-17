@@ -234,7 +234,6 @@ export default {
     // 获取用户信息
     async getUserDetail() {
       const res = await this.$api.getUserDetail(this.userId)
-      console.log(res, 'getUserDetail')
       if (res.code === 200) {
         this.userDetail = res
         this.userProfile = res.profile
@@ -248,6 +247,7 @@ export default {
       if (res.code === 200) {
         // 其实只要判断最近一周的播放记录res.weekData.length !== 0即可
         // 最近一周的播放记录不为0，所有时间的播放记录也不为0
+        console.log(res, '获取用户播放记录')
         if (res.weekData.length !== 0 || res.allData.length !== 0) {
           if (this.type === 1) {
             this.songs = this._normalizeSongs(res.weekData)
