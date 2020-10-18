@@ -1,5 +1,4 @@
 import axios from 'axios'
-import qs from 'qs'
 import router from '../../router'
 // 单独引用，此时调用方法为 Message(options)
 import { Message } from 'element-ui'
@@ -46,9 +45,14 @@ request.interceptors.response.use(
       Message.error({
         message: '请先登录！',
       })
-      router.replace({
+      // 点击返回，会跳转到上一个页面
+      router.push({
         path: '/login',
       })
+      // 点击返回，会跳转到上上一个页面
+      // router.replace({
+      //   path: '/login',
+      // })
       return
     } else {
       return Promise.reject(response)

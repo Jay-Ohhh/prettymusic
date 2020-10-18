@@ -10,6 +10,7 @@ const rank = () => import('../views/rank/index.vue')
 const singer = () => import('../views/singer/index.vue')
 const video = () => import('../views/video/index.vue')
 const mv = () => import('../views/mv/index.vue')
+const albumDetail = () => import('../views/albumdetail/AlbumDetail.vue')
 
 const loginRouter = {
   path: '/login',
@@ -117,6 +118,15 @@ const appRoutes = [
         meta: {
           title: 'mv列表',
           keepAlive: false,
+        },
+      },
+      {
+        path: '/albumdetail',
+        name: 'albumdetail',
+        component: albumDetail,
+        meta: {
+          title: '专辑详情',
+          keepAlive: true,
         },
       },
     ],

@@ -194,6 +194,7 @@ export default {
     }
   },
   created() {
+    // 歌单详情页面会有会有一些标签，当点击标签跳转时会带上这个标签
     if (this.$route.query.cate) {
       this.currentCate = this.$route.query.cate
     }

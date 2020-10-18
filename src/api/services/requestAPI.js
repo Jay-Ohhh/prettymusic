@@ -293,3 +293,19 @@ export function getArtistSimi(id) {
 export function followSinger(id, t) {
   return request.post('/artist/sub', { id, t, timestamp: new Date().getTime() })
 }
+
+/**
+ * 获取专辑内容
+ * @param {专辑id} id
+ */
+export function getAlbumData(id) {
+  return request.get(`/album?id=${id}`)
+}
+
+/**
+ * 获取专辑评论
+ * @param {请求参数对象} params
+ */
+export function getAlbumComment(params) {
+  return request.get('/comment/album', { params })
+}

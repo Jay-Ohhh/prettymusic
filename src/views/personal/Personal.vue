@@ -40,7 +40,8 @@
                 v-if="userProfile.gender === 2"></i>
             </div>
             <div class="tag">地区：
-              <span>{{provinceName}} - {{cityName}}</span>
+              <span>{{provinceName}} <span v-if="cityName">-</span>
+                {{cityName}}</span>
             </div>
           </div>
           <ul class="follow">
@@ -247,7 +248,6 @@ export default {
       if (res.code === 200) {
         // 其实只要判断最近一周的播放记录res.weekData.length !== 0即可
         // 最近一周的播放记录不为0，所有时间的播放记录也不为0
-        console.log(res, '获取用户播放记录')
         if (res.weekData.length !== 0 || res.allData.length !== 0) {
           if (this.type === 1) {
             this.songs = this._normalizeSongs(res.weekData)

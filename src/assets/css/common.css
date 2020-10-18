@@ -268,6 +268,11 @@
 .el-select-dropdown__item.selected {
   color: #fa2800;
 }
+/* el-image加载失败的图标居中显示 */
+.image-slot {
+  display: flex;
+  justify-content: center;
+}
 
 .no-data-text {
   padding-bottom: 10px;

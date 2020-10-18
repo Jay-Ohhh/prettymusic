@@ -37,7 +37,7 @@ export default {
     // 点击跳转到专辑详情页面
     toDetail(id) {
       this.$router.push({
-        path: '/albumDetail',
+        path: '/albumdetail',
         query: {
           id
         }

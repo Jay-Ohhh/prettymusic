@@ -113,10 +113,11 @@ export function scrollIt(
   let element = checkElement()
   let start = element.scrollTop // 当前y轴滚动距离
   // Date.now()和new Date().getTime()一样，获取毫秒级时间戳
-  let startTime = Date.now() // 当前时间
+  // new Date().getTime()兼容性更好
+  let startTime = new Date().getTime() // 当前时间
 
   function scroll() {
-    let nowTime = Date.now()
+    let nowTime = new Date().getTime()
     let time = Math.min(1, (nowTime - startTime) / duration)
     let timeFunction = easings[easing](time)
     element.scrollTop = timeFunction * (destination - start) + start

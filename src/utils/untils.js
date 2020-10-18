@@ -55,6 +55,7 @@ Vue.filter('formatZero', formatZero)
 
 // 歌曲详情数据处理
 class Song {
+  // 这个大括号是将传进来的对象解构赋值
   constructor({
     id,
     singer,
@@ -142,10 +143,15 @@ export function shuffle(arr) {
   return _arr
 }
 
-// 日期格式化
-export function formatDate(str, type) {
+/**
+ * 日期格式转换
+ * @param {时间戳(number)，时间字符串(string)} time
+ * 时间字符串格式要求：https://www.cnblogs.com/hongll/p/10483856.html
+ * @param {*} type
+ */
+export function formatDate(time, type) {
   // 转换为Date对象
-  let date = new Date(str)
+  let date = new Date(time)
   let year = date.getFullYear()
   let month = formatZero(date.getMonth() + 1, 2)
   let day = formatZero(date.getDate(), 2)

@@ -19,7 +19,7 @@
             <span class="nickname" @click="toUser(creator.userId)">
               {{creator.nickname}}</span>
             <span class="createTime" v-if="detail.createTime">
-              {{detail.createTime | formatDate('YYYY-MM-DD')}}创建
+              {{detail.createTime | formatDate('YYYY-MM-DD')}} 创建
             </span>
           </div>
           <div class="tag flex-row" v-if="detail.tags&&detail.tags.length>0">
@@ -29,8 +29,10 @@
           <div class="desc">
             <p class="ellipsis-two" v-html="detail.description"></p>
             <span class="flex-row" v-if="txtLength(detail.description)>50"
-              @click="openDesc(detail.description,detail.name)">全部<i
-                class="iconfont niceiconfontyoujiantou-copy-copy-copy-copy"></i></span>
+              @click="openDesc(detail.description,detail.name)">全部
+              <i
+                class="iconfont niceiconfontyoujiantou-copy-copy-copy-copy"></i>
+            </span>
           </div>
         </div>
       </div>
@@ -58,14 +60,15 @@
           </li>
         </ul>
         <p class="no-data-text" v-else style="padding-bottom:10px;">
-          {{emptyText}}</p>
+          {{emptyText}}
+        </p>
       </div>
       <!-- 相关推荐 -->
       <div class="related module shadow">
         <div class="card-header flex-row">
           <span>相关推荐</span>
         </div>
-        <ul>
+        <ul v-if="relatedList.length>0">
           <li v-for="item in relatedList" :key="item.id"
             @click="toDetail(item.id)">
             <div class="avatar">
@@ -77,6 +80,9 @@
             </div>
           </li>
         </ul>
+        <p class="no-data-text" v-else style="padding-bottom:10px;">
+          {{emptyRelated}}
+        </p>
       </div>
       <!-- 精彩评论 -->
       <div class="comment module shadow">
@@ -84,7 +90,7 @@
           <span>精彩评论</span>
         </div>
         <ul v-if="comments.length>0">
-          <li class="item" v-for="item in comments" :key="item.time">
+          <li class="item" v-for="item in comments" :key="item.commentId">
             <div class="avatar" @click="toUser(item.user.userId)">
               <img :src="item.user.avatarUrl" alt=""
                 :title="item.user.nickname">
@@ -99,7 +105,8 @@
           </li>
         </ul>
         <p class="no-data-text" v-else style="padding-bottom:10px;">
-          {{emptyComment}}</p>
+          {{emptyComment}}
+        </p>
       </div>
     </div>
   </div>
@@ -132,6 +139,8 @@ export default {
       isPerson: false,
       // 没有人收藏该歌单时显示的文本
       emptyText: '',
+      // 没有相关推荐时显示的文本
+      emptyRelated: '',
       // 没有评论时显示的文本
       emptyComment: ''
     }
@@ -151,9 +160,7 @@ export default {
   },
   created() {
     this.artistId = this.$route.query.id
-    if (this.artistId) {
-      this._initialize(this.artistId)
-    }
+    this._initialize(this.artistId)
   },
   watch: {
     // 因为设置了 <router-view :key="$route.fullPath"></router-view>
@@ -264,6 +271,9 @@ export default {
       let res = await this.$api.getRelatedPlayList(id)
       if (res.code === 200) {
         this.relatedList = res.playlists
+        if (res.playlists.length === 0) {
+          this.emptyRelated = '还没有相关推荐~'
+        }
       }
     },
     // 获取歌单收藏者
@@ -301,7 +311,7 @@ export default {
           this.comments = res.comments
         }
         // 评论数量为0时
-        if (res.hotComments.length === 0 && res.comments.length === 0) {
+        if (this.comments.length === 0) {
           this.emptyComment = '等你来评论~'
         }
       }
@@ -460,8 +470,9 @@ export default {
           }
           .nickname {
             font-size: 14px;
-            margin-right: 30px;
+            margin-right: 20px;
             cursor: pointer;
+            transition: color 0.2s;
             &:hover {
               color: #fa2800;
             }

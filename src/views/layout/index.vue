@@ -8,7 +8,8 @@
     <div class="main">
       <!-- 需要考虑哪些路由keep-alive对于用户体验比较好 -->
       <!-- max 最多可以缓存多少组件实例。一旦这个数字达到了，在新实例被创建之前，已缓存组件中最久没有被访问的实例会被销毁掉 -->
-      <keep-alive include="singerDetail,playListDetail,rank,personal,singer"
+      <keep-alive
+        include="singerDetail,playListDetail,rank,personal,singer,albumdetail"
         :max="4">
         <router-view :key="$route.fullPath"></router-view>
       </keep-alive>

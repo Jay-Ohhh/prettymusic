@@ -64,10 +64,6 @@ export default {
         position: absolute;
         top: 0;
         left: 0;
-        ::v-deep .image-slot {
-          display: flex;
-          justify-content: center;
-        }
       }
     }
     .info {
