@@ -204,7 +204,9 @@ export default {
 
         // 是否自己的歌单
         if (sessionStorage.getItem('myInfo')) {
-          let myId = JSON.parse(sessionStorage.getItem('myInfo')).userId
+          let myId =
+            JSON.parse(sessionStorage.getItem('myInfo')).userId ||
+            this.$store.getters.getUserInfo.userId
           if (this.creator.userId === myId) {
             this.isPerson = true
           }

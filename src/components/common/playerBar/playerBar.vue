@@ -92,8 +92,8 @@
               @click="listType='historyList'">最近播放</span>
             <span class="tag2" :class="{active:listType==='songSheet'}"
               @click="listType='songSheet'">当前歌单</span>
-            <i class="iconfont nicelajitong" v-if="listType==='historyList'"
-              @click="clearHistoryOrSheet"></i>
+            <i class="iconfont nicelajitong" title="全部删除"
+              v-if="listType==='historyList'" @click="clearHistoryOrSheet"></i>
           </div>
           <div class="play-all" @click="playAllSong"><i
               class="iconfont nicebofang2"></i><span>播放全部（共{{songList.length}}首）</span>
@@ -182,7 +182,13 @@ export default {
       listType: 'historyList',
       // 控制播放器的显示与隐藏的其中一个标志
       // 默认为true，第一次打开页面点击歌曲后才能显示播放器
-      showPlayerByArrow: true
+      showPlayerByArrow: true,
+      // 不要将该歌曲升至顶部
+      playSongNoRise: false,
+      // 能否将最近播放列表传入playList
+      canToPlayList: true,
+      // 当前播放歌曲在最近播放列表的索引
+      indexOfHistory: -1
     }
   },
   components: {
@@ -196,19 +202,33 @@ export default {
       'playing',
       'currentIndex',
       'currentMode',
-      'sequenceList',
       'historyList',
       'songSheet'
     ]),
     ...mapGetters(['getCurrentSong']),
     // 根据点击'最近播放'和'当前歌单'标签，改变当前列表类型listType
     // 然后显示 最近播放列表 或者 歌单歌曲列表
+    // 每次切换，对列表A或列表B数组进行排序再传入列表C，找到当前播放歌曲在列表C的索引，设置为当前播放索引
     songList() {
+      let list = []
+      let songList = []
       if (this.listType === 'historyList') {
-        return this.historyList
+        songList = list = this.historyList
       } else if (this.listType === 'songSheet') {
-        return this.songSheet
+        songList = list = this.songSheet
       }
+      // 当点击全部删除后，historyList为空数组，而playList为了播放器能够显示歌曲信息则会保留当前播放歌曲，所以当historyList为0时不能再传入playList
+      if (list.length !== 0 && this.canToPlayList === true) {
+        let song = this.getCurrentSong
+        if (this.currentMode === this.playMode.random) {
+          list = shuffle(list)
+        }
+        // 当前播放歌曲在随机列表中的索引
+        let index = list.findIndex(item => item.id === song.id)
+        this.setPlayList(list)
+        this.setCurrentIndex(index)
+      }
+      return songList
     },
     // 播放/暂停按钮切换
     playIcon() {
@@ -261,7 +281,7 @@ export default {
         audio.src = newSong.url
         audio.volume = this.volume
         audio.play()
-        this.saveHistoryList(newSong)
+        if (this.playSongNoRise === false) this.saveHistoryList(newSong)
         this.id = newSong.id
       })
       // 若歌曲5s未播放，则认为超时，修改状态确保可以切换歌曲
@@ -286,7 +306,8 @@ export default {
       'setPlaying',
       'setCurrentIndex',
       'setCurrentMode',
-      'setPlayList'
+      'setPlayList',
+      'setHistoryList'
     ]),
     ...mapActions([
       'saveHistoryList',
@@ -358,6 +379,7 @@ export default {
     },
     // 点击播放列表的歌曲前面的播放按钮，播放歌曲
     playSong(item, index) {
+      this.playSongNoRise = false
       // 暂停时再次点击播放列表的歌曲前面的播放按钮
       if (
         item.id === this.getCurrentSong.id &&
@@ -376,6 +398,9 @@ export default {
     },
     // 播放全部
     playAllSong() {
+      this.playSongNoRise = true
+      // 如果最近播放列表或当前歌单为空数组时，return
+      if (this.songList.length === 0) return
       this.playAll({ list: this.songList })
     },
     // 暂停播放
@@ -418,6 +443,33 @@ export default {
     },
     // 歌曲播放完成
     audioEnd() {
+      if (this.canToPlayList === false) {
+        // 这段代码针对于 删除的是当前播放歌曲，但当前播放歌曲不是列表A仅有的一首歌
+        // 在当前歌曲播放完成后，播放下一首之前，或者点击上一首或下一首时
+        // 根据播放模式排序后传入列表C，并将当前播放歌曲在最近列表的索引设置为当前索引。在列表循环和单曲循环模式下
+        // 下一首播放歌曲的索引即为被删除歌曲的索引，因此将该索引设置为当前播放索引。因为随机模式是乱序
+        // 对于下一首是随机，因此也可以直接将该索引设置为当前播放索引
+        // 如果没有下一首歌，直接设置当前索引为0
+        // 上一首播放歌曲的索引即为被删除歌曲的索引-1
+        this.canToPlayList = true
+        if (this.historyList.length === 0) {
+          this.setPlayList([this.getCurrentSong])
+        } else {
+          let song = this.getCurrentSong
+          let list = this.historyList
+          if (this.currentMode === this.playMode.random) {
+            list = shuffle(this.historyList)
+          }
+          this.setPlayList(list)
+          if (this.indexOfHistory < this.playList.length) {
+            this.setCurrentIndex(this.indexOfHistory)
+          } else {
+            this.setCurrentIndex(0)
+          }
+        }
+        this.setPlaying(true)
+        return
+      }
       this.currentTime = 0
       if (this.currentMode === this.playMode.loop) {
         this.loopSong()
@@ -441,7 +493,37 @@ export default {
     },
     // 上一首,即使是单曲循环也是切换到上一首，然后再单曲循环
     preSong() {
+      if (this.listType === 'historyList') {
+        this.playSongNoRise = true
+      } else {
+        this.playSongNoRise = false
+      }
       if (this.songReady === false) return
+      if (this.canToPlayList === false) {
+        // 这段代码针对于 删除的是当前播放歌曲，但当前播放歌曲不是列表A仅有的一首歌
+        // 在当前歌曲播放完成后，播放下一首之前，或者点击上一首或下一首时
+        // 根据播放模式排序后传入列表C，并将当前播放歌曲在最近列表的索引设置为当前索引。在列表循环和单曲循环模式下
+        // 下一首播放歌曲的索引即为被删除歌曲的索引，因此将该索引设置为当前播放索引。因为随机模式是乱序
+        // 对于下一首是随机，因此也可以直接将该索引设置为当前播放索引
+        // 如果没有下一首歌，直接设置当前索引为0
+        // 上一首播放歌曲的索引即为被删除歌曲的索引-1
+        this.canToPlayList = true
+        if (this.historyList.length === 0) {
+          this.setPlayList([this.getCurrentSong])
+          this.setCurrentIndex(0)
+        } else {
+          let song = this.getCurrentSong
+          let list = this.historyList
+          if (this.currentMode === this.playMode.random) {
+            list = shuffle(this.historyList)
+          }
+          this.setPlayList(list)
+          let index = this.indexOfHistory - 1
+          if (index < 0) index = this.playList.length - 1
+          this.setCurrentIndex(index)
+        }
+        return
+      }
       // 如果播放列表只有一首
       if (this.playList.length === 1) {
         this.loopSong()
@@ -460,7 +542,40 @@ export default {
     },
     // 下一首，即使是单曲循环也是切换到下一首，然后再单曲循环
     nextSong() {
+      if (this.listType === 'historyList') {
+        // 最近播放列表存在 “提升歌曲”
+        this.playSongNoRise = true
+      } else {
+        this.playSongNoRise = false
+      }
       if (this.songReady === false) return
+      if (this.canToPlayList === false) {
+        // 这段代码针对于 删除的是当前播放歌曲，但当前播放歌曲不是列表A仅有的一首歌
+        // 在当前歌曲播放完成后，播放下一首之前，或者点击上一首或下一首时
+        // 根据播放模式排序后传入列表C，并将当前播放歌曲在最近列表的索引设置为当前索引。在列表循环和单曲循环模式下
+        // 下一首播放歌曲的索引即为被删除歌曲的索引，因此将该索引设置为当前播放索引。因为随机模式是乱序
+        // 对于下一首是随机，因此也可以直接将该索引设置为当前播放索引
+        // 如果没有下一首歌，直接设置当前索引为0
+        // 上一首播放歌曲的索引即为被删除歌曲的索引-1
+        this.canToPlayList = true
+        if (this.historyList.length === 0) {
+          this.setPlayList([this.getCurrentSong])
+          this.setCurrentIndex(0)
+        } else {
+          let song = this.getCurrentSong
+          let list = this.historyList
+          if (this.currentMode === this.playMode.random) {
+            list = shuffle(this.historyList)
+          }
+          this.setPlayList(list)
+          if (this.indexOfHistory < this.playList.length) {
+            this.setCurrentIndex(this.indexOfHistory)
+          } else {
+            this.setCurrentIndex(0)
+          }
+        }
+        return
+      }
       if (this.playList.length === 1) {
         this.loopSong()
         return
@@ -507,6 +622,8 @@ export default {
     changeMode() {
       const currentMode = (this.currentMode + 1) % 3
       this.setCurrentMode(currentMode)
+      if (this.canToPlayList === false) return
+      if (this.songList.length === 0) return
       let list = null
       if (currentMode === this.playMode.random) {
         list = shuffle(this.songList)
@@ -537,7 +654,34 @@ export default {
     },
     // 删除单个歌曲的历史播放记录
     deleteHistoryItem(item, index) {
-      this.deleteOneHistory(item)
+      // 删除的不是当前歌曲
+      if (item.id !== this.getCurrentSong.id) {
+        this.deleteOneHistory(item)
+        // 删除在最近播放列表的该歌曲
+        // 最近播放列表一旦发生变化，在songList()内
+        // 找到该歌曲在最近播放列表的索引，然后将最近播放传入playList
+        // 将该索引设置为当前索引，该索引即指向下一首
+        // 在随机模式下，下一首指向谁都无所谓
+      } else if (
+        item.id === this.getCurrentSong.id &&
+        this.historyList.length === 1
+      ) {
+        // 删除的是当前播放歌曲且最近播放列表仅有该歌曲时
+        this.deleteOneHistory(item)
+        // 最近播放列表发生了变化，但此时为空数组
+        // 在songList()内不会找索引，不会传入playList
+        this.setPlayList([item])
+        this.setCurrentIndex(0)
+      } else if (
+        item.id === this.getCurrentSong.id &&
+        this.historyList.length > 1
+      ) {
+        this.canToPlayList = false
+        this.indexOfHistory = this.historyList.findIndex(
+          val => val.id === item.id
+        )
+        this.deleteOneHistory(item)
+      }
     },
     // 折叠/展示 播放器
     foldOrShowPlayer() {

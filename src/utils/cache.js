@@ -4,7 +4,7 @@ const SEARCH_MAX = 15
 const HISTORY_MAX_LENGTH = 50
 
 /**
- * 插入元素，用于搜索关键词的插入，重复搜索的关键词保持在最前面
+ * 插入元素在数组第一位，如果数组已存在该元素，则先删除后插入
  * @param {数组} arr
  * @param {插入的元素} val
  * @param {findIndex方法的条件函数} compare
@@ -24,7 +24,7 @@ function insertArray(arr, val, compare, maxLen) {
 }
 
 /**
- * 添加元素，用于最近播放列表的添加，如果最近播放列表已存在这首歌，则return，否则添加在列表最前面
+ * 添加元素到数组第一位，如果数组已存在该元素，则return
  * @param {数组} arr
  * @param {插入的元素} val
  * @param {findIndex方法的条件函数} compare
@@ -76,7 +76,7 @@ export function clearSearch() {
 // 添加到最近播放列表
 export function saveHistory(song) {
   let songs = JSON.parse(sessionStorage.getItem('history')) || []
-  addToArray(songs, song, item => item.id === song.id, HISTORY_MAX_LENGTH)
+  insertArray(songs, song, item => item.id === song.id, HISTORY_MAX_LENGTH)
   sessionStorage.setItem('history', JSON.stringify(songs))
   return songs
 }

@@ -55,6 +55,7 @@ export default {
     progressMouseDown(e) {
       // 拖动开始
       this.touch.initiated = true
+      // 记录鼠标刚按下的x轴坐标
       // 以Document 对象（即文本窗口）左上角为原点，定位x轴坐标
       this.touch.startX = e.pageX
       // clientWidth获取元素除边框外的宽度，返回值不带单位

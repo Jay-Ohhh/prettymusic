@@ -1,4 +1,5 @@
 <template>
+  <!-- 专辑详情页面 -->
   <div class="album-detail container">
     <!-- 左侧 -->
     <div class="left shadow">
@@ -17,7 +18,7 @@
             </div>
             <span class="nickname" @click="toSingerDetail(creator.id)">
               {{creator.name}}</span>
-            <span class="createTime" v-if="detail.publishTime">
+            <span class="createTime">
               {{detail.publishTime | formatDate('YYYY-MM-DD')}} 创建
             </span>
           </div>
