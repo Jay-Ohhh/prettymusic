@@ -58,27 +58,22 @@ export default {
     // 跳转到视频详情或直播页面
     toDetailOrLive(id, isLive) {
       if (isLive) {
-        let url = `https://iplay.163.com/live?id=${id}`
         // 新窗口打开
-        window.open(url, '_blank')
+        window.open(`https://iplay.163.com/live?id=${id}`, '_blank')
       } else {
         // 先停止播放音乐
         this.$store.dispatch('stopPlay')
         if (typeof id === 'number') {
           // MV的id是数字
           this.$router.push({
-            path: '/mv-detail',
-            query: {
-              id
-            }
+            path: '/mvdetail',
+            query: { id }
           })
         } else {
           // 视频的id是字符串，类似于"EEC51C6B714CDA2C32F4578A17244ABA"
           this.$router.push({
-            path: 'video-detail',
-            query: {
-              id
-            }
+            path: '/videodetail',
+            query: { id }
           })
         }
       }
@@ -92,7 +87,6 @@ export default {
   flex-wrap: wrap;
   margin: 0 -15px;
   padding: 15px 0;
-
   li {
     flex: 0 0 25%;
     max-width: 25%;
@@ -164,6 +158,7 @@ export default {
           color: #fff;
           font-size: 12px;
           background-color: #fa2800;
+          cursor: pointer;
           i {
             position: relative;
             left: 1px;

@@ -117,6 +117,7 @@ export default {
         this.$store.commit('setUserInfo', {})
         this.$store.commit('setLoginStatus', false)
         this.$forceUpdate()
+        this.$bus.$emit('forceUpdate')
       }
     },
     // 打开搜索框

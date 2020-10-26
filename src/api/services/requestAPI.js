@@ -3,7 +3,7 @@ import { request } from './axios_instance'
 // 本项目同时支持 GET/POST 请按实际需求使用，POST请求url必须添加时间戳timestamp,使每次请求url不一样,不然请求会被缓存
 // 时间戳加在url的位置无要求
 // 隐私数据用post请求
-// 有些请求，例如关注或取消关注用户/歌手，即使发送了POST请求且添加了时间戳，但是接口返回的数据不会立即更新，需要等待一段时间才会更新
+// 由于接口做了缓存处理 ( 缓存 2 分钟,不缓存数据极容易引起网易服务器高频ip错误), 相同的 url 会在两分钟内只向网易服务器发一次请求 , 如果遇到不需要缓存结果的接口 , 可在请求 url 后面加一个时间戳参数使 url 不同
 /**
  * @method 获取轮播图
  */
@@ -64,7 +64,8 @@ export function login(phone, password) {
  * @param {用户id} uid
  */
 export function getUserDetail(uid) {
-  return request.get(`/user/detail?uid=${uid}`)
+  let timestamp = new Date().getTime()
+  return request.get(`/user/detail?uid=${uid}&timestamp=${timestamp}`)
 }
 
 /**
@@ -250,7 +251,8 @@ export function getMvAll(params) {
  * @param {歌手id(非用户id)} id
  */
 export function getArtists(id) {
-  return request.get(`/artists?id=${id}`)
+  let timestamp = new Date().getTime()
+  return request.get(`/artists?id=${id}&timestamp=${timestamp}`)
 }
 
 /**
@@ -308,4 +310,75 @@ export function getAlbumData(id) {
  */
 export function getAlbumComment(params) {
   return request.get('/comment/album', { params })
+}
+
+/**
+ * 发送评论
+ * @param {请求参数对象} params
+ */
+export function commentSubmit(params) {
+  return request.post('/comment', params)
+}
+
+/**
+ * 删除评论
+ * @param {请求参数对象} params
+ */
+export function commentDelete(params) {
+  return request.post('/comment', params)
+}
+
+/**
+ * 资源点赞（MV，电台，视频）
+ * @param {请求参数对象} params
+ */
+export function likeResource(params) {
+  return request.post('/resource/like', params)
+}
+
+/**
+ * 获取视频播放地址
+ * @param {视频id} id
+ */
+export function getVideoUrl(id) {
+  return request.get(`/video/url?id=${id}`)
+}
+
+/**
+ * 获取视频详情
+ * @param {视频id} id
+ */
+export function getVideoDetail(id) {
+  return request.get(`/video/detail?id=${id}`)
+}
+
+/**
+ * 获取视频的点赞、转发、评论数
+ * @param {请求参数对象} params
+ */
+export function getVideoDetailInfo(params) {
+  return request.get('/video/detail/info', { params })
+}
+
+/**
+ * 获取视频评论
+ * @param {请求参数对象} params
+ */
+export function getVideoComments(params) {
+  return request.get('/comment/video', { params })
+}
+/**
+ * 评论点赞/取消点赞
+ * @param {请求参数对象} params
+ */
+export function commentLike(params) {
+  return request.post('/comment/like', params)
+}
+
+/**
+ * 获取相关视频
+ * @param {视频id} id
+ */
+export function getVideoRelated(id) {
+  return request.get(`/related/allvideo?id=${id}`)
 }

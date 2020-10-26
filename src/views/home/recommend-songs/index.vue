@@ -1,6 +1,6 @@
 <template>
   <!-- 首页推荐歌单模块 -->
-  <div class="recommend-songs">
+  <div class="recommend-sheet">
     <h2 class="title">推荐歌单</h2>
     <song-sheet :sheet-list="recSongs"></song-sheet>
   </div>
@@ -33,7 +33,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.recommend-songs {
+.recommend-sheet {
   margin-top: 40px;
   .title {
     margin-bottom: 15px;

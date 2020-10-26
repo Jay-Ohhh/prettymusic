@@ -126,7 +126,7 @@ export default {
       myList: [],
       // 收藏的歌单列表
       collectList: [],
-      // 最近一周:1，所有时间:0
+      // 标签选项：最近一周:1，所有时间:0
       type: 1,
       // 用户详情
       userDetail: {},
@@ -175,6 +175,7 @@ export default {
       if (sessionStorage.getItem('cookie') && sessionStorage.getItem('token')) {
         const res = await this.$api.followUser(this.userProfile.userId, t)
         if (res.code === 200) {
+          // 这里不必再发送请求刷新this.followed，手动修改即可
           if (t === 1) {
             this.followed = true
             // 粉丝数量+1
@@ -246,14 +247,9 @@ export default {
     async getUserRecord() {
       const res = await this.$api.getUserRecord(this.userId, this.type)
       if (res.code === 200) {
-        // 其实只要判断最近一周的播放记录res.weekData.length !== 0即可
-        // 最近一周的播放记录不为0，所有时间的播放记录也不为0
-        if (res.weekData.length !== 0 || res.allData.length !== 0) {
-          if (this.type === 1) {
-            this.songs = this._normalizeSongs(res.weekData)
-          } else if (this.type === 0) {
-            this.songs = this._normalizeSongs(res.allData)
-          }
+        let arr = res.weekData || res.allData
+        if (arr.length !== 0) {
+          this.songs = this._normalizeSongs(arr)
         } else {
           this.emptyText = 'ta可能不想让我们看到~'
         }

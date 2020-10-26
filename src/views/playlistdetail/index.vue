@@ -24,7 +24,7 @@
           </div>
           <div class="tag flex-row" v-if="detail.tags&&detail.tags.length>0">
             标签：<a v-for="item in detail.tags" :key="item"
-              @click="tag(item)">{{item}}</a>
+              @click="toPlayList(item)">{{item}}</a>
           </div>
           <div class="desc">
             <p class="ellipsis-two" v-html="detail.description"></p>
@@ -174,15 +174,6 @@ export default {
     // }
   },
   methods: {
-    // 点击标签跳转到歌单列表页面
-    tag(cate) {
-      this.$router.push({
-        path: '/playlist',
-        query: {
-          cate
-        }
-      })
-    },
     // 获取歌单详情
     // id是歌单id, s是歌单最近的s个收藏者，默认为8
     async getPlayListDetail(id, s) {
@@ -284,7 +275,8 @@ export default {
       const params = {
         id,
         limit: 28, // 收藏者数量
-        offset: 0 // 偏移量
+        offset: 0, // 偏移量
+        timestamp: new Date().getTime()
       }
       const res = await this.$api.getSubscribers(params)
       if (res.code === 200) {
@@ -331,7 +323,7 @@ export default {
         dangerouslyUseHTMLString: true
       }).catch(e => {})
     },
-    // 收藏或取消收藏歌单，由于接口的问题，收藏与取消收藏的接口不会立即更新状态
+    // 收藏或取消收藏歌单
     async collectArtist() {
       if (
         sessionStorage.getItem('cookie') &&
@@ -375,6 +367,15 @@ export default {
           this.$router.push('/login')
         }, 500)
       }
+    },
+    // 点击标签跳转到歌单列表页面
+    toPlayList(cate) {
+      this.$router.push({
+        name: 'playlist',
+        params: {
+          cate
+        }
+      })
     },
     // 点击推荐歌单跳转到另一个歌单详情页面
     toDetail(id) {

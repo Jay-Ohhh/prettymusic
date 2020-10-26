@@ -381,10 +381,7 @@ export default {
     playSong(item, index) {
       this.playSongNoRise = false
       // 暂停时再次点击播放列表的歌曲前面的播放按钮
-      if (
-        item.id === this.getCurrentSong.id &&
-        this.currentMode !== this.playMode.random
-      ) {
+      if (item.id === this.getCurrentSong.id) {
         this.setPlaying(true)
         return
       }
@@ -692,22 +689,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.fade-enter {
-  opacity: 0;
-  transform: translateY(30px);
-}
-.fade-enter-active {
-  transition: all 0.5s;
-}
+.fade-enter,
 .fade-leave-to {
   opacity: 0;
   transform: translateY(30px);
 }
+.fade-enter-active,
 .fade-leave-active {
   transition: all 0.5s;
 }
 .player-bar {
-  // 已设置了flex--row类名
+  // 已设置了flex-row类名
   justify-content: space-between;
   position: fixed;
   bottom: 0;

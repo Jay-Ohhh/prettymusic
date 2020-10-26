@@ -306,12 +306,14 @@ export default {
           }).then(async () => {
             const res1 = await this.$api.followSinger(this.singerId, 0)
             if (res1.code === 200) {
+              // 不必再发送请求刷新this.followed，手动修改即可
               this.followed = false
             }
           })
         } else {
           const res1 = await this.$api.followSinger(this.singerId, 1)
           if (res1.code === 200) {
+            // 不必再发送请求刷新this.followed，手动修改即可
             this.followed = true
           }
         }

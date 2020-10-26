@@ -81,7 +81,16 @@ export default {
   created() {
     this.getVideoCategory()
     this.getVideoTag()
-    this.getVideoAll()
+    // 视频详情页面会有一些标签，当点击标签跳转时会带上这个标签
+    // 使用params，参数不会显示在url
+    // params只能和name使用
+    if (this.$route.params.id) {
+      this.tagId = this.$route.params.id
+      this.currentCate = this.$route.params.name
+      this.getVideoOther(this.tagId)
+    } else {
+      this.getVideoAll()
+    }
   },
   methods: {
     // 显示分类弹窗
@@ -135,6 +144,7 @@ export default {
       }
     },
     // 获取视频标签/分类下的视频
+    // id是标签/分类id
     async getVideoOther(id) {
       this.screenLoading = true
       try {

@@ -1,16 +1,27 @@
-const layout = () => import('../views/layout/index.vue')
-const home = () => import('../views/home/index.vue')
+// 将顶部导航的页面打包在同个异步块 (chunk) 中
+const layout = () =>
+  import(/* webpackChunkName: "group-navgation" */ '../views/layout/index.vue')
+const home = () =>
+  import(/* webpackChunkName: "group-navgation" */ '../views/home/index.vue')
+const rank = () =>
+  import(/* webpackChunkName: "group-navgation" */ '../views/rank/index.vue')
+const playList = () =>
+  import(
+    /* webpackChunkName: "group-navgation" */ '../views/playlist/PlayList.vue'
+  )
+const singer = () =>
+  import(/* webpackChunkName: "group-navgation" */ '../views/singer/index.vue')
+const video = () =>
+  import(/* webpackChunkName: "group-navgation" */ '../views/video/index.vue')
+const mv = () =>
+  import(/* webpackChunkName: "group-navgation" */ '../views/mv/index.vue')
 const playListDetail = () => import('../views/playlistdetail/index.vue')
 const singerDetail = () => import('../views/singerdetail/index.vue')
-const login = () => import('../components/common/login/index.vue')
-const error = () => import('../views/error/404.vue')
-const playList = () => import('../views/playlist/PlayList.vue')
-const personal = () => import('../views/personal/Personal.vue')
-const rank = () => import('../views/rank/index.vue')
-const singer = () => import('../views/singer/index.vue')
-const video = () => import('../views/video/index.vue')
-const mv = () => import('../views/mv/index.vue')
 const albumDetail = () => import('../views/albumdetail/AlbumDetail.vue')
+const videoDetail = () => import('../views/video-detail/VideoDetail.vue')
+const login = () => import('../components/common/login/index.vue')
+const personal = () => import('../views/personal/Personal.vue')
+const error = () => import('../views/error/404.vue')
 
 const loginRouter = {
   path: '/login',
@@ -18,6 +29,7 @@ const loginRouter = {
   component: login,
   meta: {
     title: '登录',
+    // 是否登录页面
     isLogin: true,
   },
 }
@@ -49,20 +61,11 @@ const appRoutes = [
         },
       },
       {
-        path: '/playlistdetail',
-        name: 'playlistdetail',
-        component: playListDetail,
+        path: '/rank',
+        name: 'rank',
+        component: rank,
         meta: {
-          title: '歌曲列表',
-          keepAlive: true,
-        },
-      },
-      {
-        path: '/singerdetail',
-        name: 'singerdetail',
-        component: singerDetail,
-        meta: {
-          title: '歌手详情',
+          title: '排行榜',
           keepAlive: true,
         },
       },
@@ -72,24 +75,6 @@ const appRoutes = [
         component: playList,
         meta: {
           title: '歌单列表',
-          keepAlive: true,
-        },
-      },
-      {
-        path: '/personal',
-        name: 'personal',
-        component: personal,
-        meta: {
-          title: '用户',
-          keepAlive: true,
-        },
-      },
-      {
-        path: '/rank',
-        name: 'rank',
-        component: rank,
-        meta: {
-          title: '排行榜',
           keepAlive: true,
         },
       },
@@ -121,11 +106,47 @@ const appRoutes = [
         },
       },
       {
+        path: '/playlistdetail',
+        name: 'playlistdetail',
+        component: playListDetail,
+        meta: {
+          title: '歌曲列表',
+          keepAlive: true,
+        },
+      },
+      {
+        path: '/singerdetail',
+        name: 'singerdetail',
+        component: singerDetail,
+        meta: {
+          title: '歌手详情',
+          keepAlive: true,
+        },
+      },
+      {
         path: '/albumdetail',
         name: 'albumdetail',
         component: albumDetail,
         meta: {
           title: '专辑详情',
+          keepAlive: true,
+        },
+      },
+      {
+        path: '/videodetail',
+        name: 'videodetail',
+        component: videoDetail,
+        meta: {
+          title: '视频详情',
+          keepAlive: true,
+        },
+      },
+      {
+        path: '/personal',
+        name: 'personal',
+        component: personal,
+        meta: {
+          title: '用户',
           keepAlive: true,
         },
       },

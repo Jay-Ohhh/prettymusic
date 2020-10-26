@@ -4,7 +4,7 @@
     <!-- 轮播图 -->
     <banner></banner>
     <!-- 推荐歌单 -->
-    <recommend-songs></recommend-songs>
+    <recommend-sheet></recommend-sheet>
     <!-- 推荐新音乐 -->
     <recommend-new-music></recommend-new-music>
     <!-- 热门歌手 -->
@@ -14,14 +14,14 @@
 
 <script>
 import banner from '../../components/common/Banner.vue'
-import recommendSongs from './recommend-songs/index'
+import recommendSheet from './recommend-songs/index'
 import recommendNewMusic from './recommend-newmusic/index'
 import hotSinger from './hot-singer/index'
 export default {
   name: 'home',
   components: {
     banner,
-    recommendSongs,
+    recommendSheet,
     recommendNewMusic,
     hotSinger
   }

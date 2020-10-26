@@ -1,30 +1,32 @@
 <template>
   <!-- 评论列表组件 -->
   <div class="comment-line">
-    <div class="avatar">
+    <div class="avatar" @click="toUser(comment.user.userId)">
       <img :src="comment.user.avatarUrl" alt="" :title="comment.user.nickname">
     </div>
     <div class="info">
       <h2 class="flex-between">
-        <span>{{comment.user.nickname}}
+        <span @click="toUser(comment.user.userId)">{{comment.user.nickname}}
           <small> · {{comment.time | formatTimeBefore}}</small>
         </span>
         <div class="tool flex-row">
           <i class="iconfont nicezan1 icon-zan" :class="{active:comment.liked}"
             @click="commentLike(comment.commentId,comment.liked)">
           </i>
-          <span>({{comment.likeCount}})</span>
-          <i class="iconfont nicevoice icon-comment"
-            v-if="comment.user.userId !== myId"
+          <span>({{comment.likedCount}})</span>
+          <i class="iconfont nicevoice icon-comment" title="回复"
+            v-if="comment.user.userId != myId"
             @click="commentReply(comment.commentId)">
           </i>
-          <span v-else @click="commentDelete(comment.commentId)">删除</span>
+          <i class="iconfont nicelajitong" title="删除" v-else
+            @click="commentDelete(comment.commentId,comment.content)"></i>
         </div>
       </h2>
       <div class="content">{{comment.content}}
         <div class="reply" v-for="subItem of comment.beReplied"
           :key="subItem.beRepliedCommentId">
-          <small>@{{subItem.user.nickname}}：</small>{{subItem.content}}
+          <!-- 被回复的评论 -->
+          <span><small>@{{subItem.user.nickname}}：</small>{{subItem.content}}</span>
         </div>
       </div>
     </div>
@@ -42,14 +44,20 @@ export default {
   computed: {
     // 我的ID
     myId() {
-      return (
-        JOSN.parse(sessionStorage.getItem('myInfo')).userId ||
+      if (
+        JSON.parse(sessionStorage.getItem('myInfo')) ||
         this.$store.getters.getUserInfo.userId
-      )
+      ) {
+        return (
+          JSON.parse(sessionStorage.getItem('myInfo')).userId ||
+          this.$store.getters.getUserInfo.userId
+        )
+      }
+      return ''
     }
   },
   methods: {
-    // 回复评论
+    // 点击评论的回复按钮
     commentReply(id) {
       this.$emit('commentreply', id)
     },
@@ -59,8 +67,15 @@ export default {
       this.$emit('commentlike', id, liked)
     },
     // 删除评论
-    commentDelete(id) {
-      this.$emit('commentdelete', id)
+    commentDelete(id, content) {
+      this.$emit('commentdelete', id, content)
+    },
+    // 跳转到用户页面
+    toUser(id) {
+      this.$router.push({
+        path: '/personal',
+        query: { id }
+      })
     }
   }
 }
@@ -77,6 +92,7 @@ export default {
     height: 45px;
     margin-right: 12px;
     border-radius: 50%;
+    cursor: pointer;
     img {
       width: 100%;
       border-radius: 50%;
@@ -88,19 +104,32 @@ export default {
       font-size: 15px;
       margin-right: 5px;
       margin-bottom: 10px;
-      small {
-        font-size: 12px;
-        font-weight: 200;
-        color: #a5a5c1;
+      span {
+        cursor: pointer;
+        small {
+          font-size: 12px;
+          font-weight: 200;
+          color: #a5a5c1;
+          cursor: default;
+        }
       }
       .tool {
         i {
           font-size: 24px;
           font-weight: 100;
           cursor: pointer;
+          transition: color 0.1s;
+          &:hover {
+            color: #fa2800;
+          }
         }
         .icon-zan.active {
           color: #fa2800;
+        }
+        .nicelajitong {
+          position: relative;
+          top: 1px;
+          font-size: 19px;
         }
         span {
           position: relative;
@@ -129,13 +158,26 @@ export default {
       color: #4a4a4a;
       background-color: #f5f5f5;
       .reply {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         padding: 8px 10px;
         margin-top: 10px;
         border-radius: 3px;
         color: #666;
         background-color: #fff;
-        small {
-          color: #fa2800;
+        span {
+          small {
+            color: #fa2800;
+          }
+        }
+        i {
+          font-size: 16px;
+          cursor: pointer;
+          transition: color 0.1s;
+          &:hover {
+            color: #fa2800;
+          }
         }
       }
     }

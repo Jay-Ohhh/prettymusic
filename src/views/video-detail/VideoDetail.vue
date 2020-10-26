@@ -10,22 +10,25 @@
         <video :src="videoUrl" controls controlslist="nodownload"></video>
       </div>
       <div class="video-foot">
-        <h2 class="title flex-row">{{detail.title}}</h2>
+        <h2 class="title flex-row ellipsis">{{detail.title}}</h2>
         <div class="tag">
-          <a v-for="item of detail.videoGroup" :key="item.id">#{{item.name}}</a>
+          <a v-for="item of detail.videoGroup" :key="item.id"
+            @click="toVideo(item.id,item.name)">
+            {{item.name}}
+          </a>
         </div>
         <p class="flex-row">
           <span>发布：{{detail.publishTime|formatDate('YYYY-MM-DD')}}</span>
           <span
             v-if="detail.playTime">播放次数：{{detail.playTime|transNum(1)}}</span>
         </p>
-        <div class="follow">
+        <div class="follow flex-row">
           <div class="box" :class="videoDetailInfo.isLike?'active':''"
-            @click="like">
+            @click="likeResource">
             <i class="iconfont nicexihuan3 icon-like"></i>
-            {{videoDetailInfo.likeCount}}
+            {{videoDetailInfo.likedCount}}
           </div>
-          <div class="box" @click="collect">
+          <div class="box">
             <i class="iconfont niceshoucang2 icon-collection"></i>
             {{ detail.subscribeCount }}
           </div>
@@ -39,11 +42,11 @@
       <div class="comment-wrap">
         <div class="title flex-row">
           <i class="iconfont nicepinglun"></i>Comments |
-          <span>{{videoDetailINfo.commentCount}} 条评论</span>
+          <span>{{videoDetailInfo.commentCount}} 条评论</span>
         </div>
-        <comment-box :current-comment-id="currentCommentId"
-          :fontMaxLength="1000" @commentsubmit="commentSubmit"
-          @cancelcomment="cancelComment">
+        <comment-box v-if="currentCommentId===''" :clear-text="clearText"
+          :current-comment-id="currentCommentId" :fontMaxLength="1000"
+          @commentsubmit="commentSubmit" @cancelcomment="cancelComment">
         </comment-box>
         <!-- 精彩评论 -->
         <div class="hot-comment comment-list" v-if="hotComments.length>0">
@@ -55,8 +58,9 @@
               @commentlike="commentLike" @commentdelete="commentDelete">
             </comment-line>
             <comment-box v-if="currentCommentId == item.commentId"
-              :current-comment-id="currentCommentId" :fontMaxLength="1000"
-              @commentsubmit="commentSubmit" @cancelcomment="cancelComment">
+              :clear-text="clearText" :current-comment-id="currentCommentId"
+              :fontMaxLength="1000" @commentsubmit="commentSubmit"
+              @cancelcomment="cancelComment">
             </comment-box>
           </div>
         </div>
@@ -71,15 +75,18 @@
                 @commentlike="commentLike" @commentdelete="commentDelete">
               </comment-line>
               <comment-box v-if="currentCommentId == item.commentId"
-                :current-comment-id="currentCommentId" :fontMaxLength="1000"
-                @commentsubmit="commentSubmit" @cancelcomment="cancelComment">
+                :clear-text="clearText" :current-comment-id="currentCommentId"
+                :fontMaxLength="1000" @commentsubmit="commentSubmit"
+                @cancelcomment="cancelComment">
               </comment-box>
             </div>
             <!-- 评论分页器 -->
             <el-pagination @size-change="handleSizeChange" background
               @current-change="handleCurrentChange" hide-on-single-page
-              :current-page.sync="currentPage" :page-size="limit"
-              layout="total, prev, pager, next, jumper" :total="commentTotal">
+              :current-page.sync="currentPage" :page-sizes="[15, 20, 30]"
+              :page-size="limit"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="commentTotal">
             </el-pagination>
           </div>
           <!-- test -->
@@ -94,61 +101,63 @@
         <div class="card-header flex-row">
           <span>视频简介</span>
         </div>
-        <div class="content">
-          <div class="author">
-            <div class="avatar" @click="toUser(creator.userId)">
-              <img :src="creator.avatarUrl" alt="">
-            </div>
-            <p class="name" @click="toUser(creator.userId)">{{creator.nickname}}
-            </p>
-            <p v-if="detail.description">{{detail.description}}</p>
-            <p v-else>视频暂无简介~</p>
+        <div class="author">
+          <div class="avatar" @click="toUser(creator.userId)">
+            <img :src="creator.avatarUrl" alt="">
           </div>
+          <p class="name" @click="toUser(creator.userId)">{{creator.nickname}}
+          </p>
         </div>
+        <p v-if="detail.description">{{detail.description}}
+        </p>
+        <p v-else>视频暂无简介~</p>
       </div>
       <!-- 相关推荐 -->
       <div class="related module shadow">
         <div class="card-header flex-row">
-          <!-- 视频列表 -->
-          <ul class="mv-list flex-row" v-if="relatedList.length>0">
-            <!-- isLive：是否直播 -->
-            <li :class="[{live:item.isLive},flexNum]" v-for="item in mvs"
-              :key="item.id">
-              <div class="cover" @click="toDetailOrLive(item.id,item.isLive)">
-                <!-- 图片 -->
-                <el-image :src="item.picUrl" lazy>
-                  <!-- el-image 加载失败时内容 -->
-                  <div slot="error" class="image-slot">
-                    <i class="el-icon-picture-outline"
-                      style="font-size:18px;"></i>
-                  </div>
-                </el-image>
-                <!-- 播放数 -->
-                <div class="count-wrapper">
-                  <i class="arrow"></i>
-                  <span class="count">{{item.playCount | transNum(1)}}</span>
-                </div>
-                <!-- 播放按钮 -->
-                <div class="action">
-                  <button class="play flex-center">
-                    <i class="iconfont nicebofang1"></i>
-                  </button>
-                </div>
-                <div class="foot flex-between">
-                  <span>{{item.nickName}}</span>
-                  <span>{{item.duration | formatTime}}</span>
-                </div>
-              </div>
-              <div class="info">
-                <h2 class="title ellipsis">{{item.title}}</h2>
-              </div>
-            </li>
-          </ul>
-          <!-- test -->
-          <pretty-empty empty-text="暂无相关推荐视频~"></pretty-empty>
+          <span>相关推荐</span>
         </div>
+        <!-- 视频列表 -->
+        <ul class="mv-list flex-row" v-if="relatedList.length>0">
+          <!-- isLive：是否直播 -->
+          <li :class="{live:item.isLive}" v-for="item in relatedList"
+            :key="item.vid">
+            <div class="cover" @click="toDetailOrLive(item.vid,item.isLive)">
+              <!-- 图片 -->
+              <el-image :src="item.coverUrl">
+                <!-- el-image 加载失败时内容 -->
+                <div slot="error" class="image-slot">
+                  <i class="el-icon-picture-outline"
+                    style="font-size:18px;"></i>
+                </div>
+              </el-image>
+              <!-- 播放数 播放时长 -->
+              <div class="top flex-between">
+                <span class="count">
+                  <i class="arrow"></i>{{item.playTime | transNum(1)}}
+                </span>
+                <span>{{item.durationms | formatTime}}</span>
+              </div>
+              <!-- 播放按钮 -->
+              <div class="action">
+                <button class="play flex-center">
+                  <i class="iconfont nicebofang1"></i>
+                </button>
+              </div>
+            </div>
+            <div class="info">
+              <h2 class="title ellipsis">{{item.title}}</h2>
+              By.<span v-for="author of item.creator" :key="author.userId">
+                <small>&emsp;{{author.userName}}&emsp;</small>
+              </span>
+            </div>
+          </li>
+        </ul>
+        <!-- test -->
+        <pretty-empty v-else empty-text="暂无相关推荐视频~"></pretty-empty>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -166,7 +175,28 @@ export default {
       // 偏移量
       offset: 0,
       // 评论总数
-      commentTotal: 0
+      commentTotal: 0,
+      // 视频详情
+      detail: {},
+      // 作者
+      creator: {},
+      // 相关视频
+      relatedList: [],
+      // 热评
+      hotComments: [],
+      // 评论
+      comments: [],
+      // 想要回复的评论id
+      // 为''时即发表评论，不对评论回复
+      currentCommentId: '',
+      // 视频播放地址
+      videoUrl: '',
+      // 视频id
+      videoId: '',
+      // 视频的点赞、转发、评论数据对象
+      videoDetailInfo: {},
+      // 清空文本框
+      clearText: false
     }
   },
   components: {
@@ -174,25 +204,483 @@ export default {
     commentLine,
     prettyEmpty
   },
+  created() {
+    this.videoId = this.$route.query.id
+    this._initailze()
+  },
   methods: {
-    // 提交评论
-    async commentSubmit(content) {},
+    // 发送评论
+    async commentSubmit(content) {
+      if (content.trim() === '') {
+        this.$msg('请输入内容')
+        return
+      } else {
+        let timestamp = new Date().getTime()
+        const params = {
+          // 0歌曲 1mv 2歌单 3专辑 4电台 5视频 6动态
+          type: 5,
+          id: this.videoId,
+          content,
+          timestamp
+        }
+        if (this.currentCommentId === '') {
+          // 发布评论
+          params.t = 1
+        } else {
+          // 回复评论
+          params.t = 2
+          params.commentId = this.currentCommentId
+        }
+        const res = await this.$api.commentSubmit(params)
+        if (res.code === 200) {
+          this.$msg.success('提交成功')
+          this.currentCommentId = ''
+          this.clearText = true
+          this.clearText = false
+          this.getVideoDetailInfo()
+          this.getVideoComments()
+        }
+      }
+    },
     // 取消评论
-    async cancelComment() {},
-    // 回复评论
-    async commentReply() {},
+    cancelComment() {
+      this.currentCommentId = ''
+    },
+    // 点击评论的回复按钮
+    async commentReply(id) {
+      this.currentCommentId = id
+    },
     // 点赞/取消点赞评论
     // liked是boolean值
-    async commentlike(id, liked) {},
+    async commentLike(cid, liked) {
+      let timestamp = new Date().getTime()
+      const params = {
+        id: this.videoId,
+        cid,
+        // 0歌曲 1mv 2歌单 3专辑 4电台 5视频 6动态
+        type: 5,
+        timestamp
+      }
+      if (liked) {
+        // 0取消点赞
+        params.t = 0
+      } else {
+        // 1点赞
+        params.t = 1
+      }
+      const res = await this.$api.commentLike(params)
+      if (res.code === 200) {
+        this.getVideoComments(this.videoId)
+      }
+    },
     // 删除评论
-    async commentDelete(id) {},
-    // 改变每页显示个数
-    handleSizeChange(val) {},
-    // 改变当前页数
-    handleCurrentChange(val) {}
+    async commentDelete(id, content) {
+      let timestamp = new Date().getTime()
+      const params = {
+        // 0删除 1发布 2回复
+        t: 0,
+        // 0歌曲 1mv 2歌单 3专辑 4电台 5视频 6动态
+        type: 5,
+        id: this.videoId,
+        commentId: id,
+        timestamp
+      }
+      const res = await this.$api.commentDelete(params)
+      if (res.code === 200) {
+        this.$msg.success('删除成功')
+        this.getVideoDetailInfo()
+        this.getVideoComments()
+      }
+    },
+    // 资源点赞/取消点赞
+    async likeResource() {
+      // 1mv 4电台 5视频 6动态
+      let type = 5
+      // 1点赞 其余为取消点赞
+      let t = 1
+      if (this.videoDetailInfo.isLike) {
+        t = 2
+      }
+      let timestamp = new Date().getTime()
+      const params = {
+        t,
+        type,
+        id: this.videoId,
+        timestamp
+      }
+      const res = await this.$api.likeResource(params)
+      if (res.code === 200) {
+        this.getVideoDetailInfo()
+      }
+    },
+    // 资源收藏/取消收藏
+    async collectResource() {
+      let timestamp = new Date().getTime()
+    },
+    // 获取视频播放地址
+    async getVideoUrl() {
+      try {
+        const res = await this.$api.getVideoUrl(this.videoId)
+        if (res.code === 200) {
+          this.videoUrl = res.urls[0].url
+        }
+      } catch (e) {
+        this.$msg('视频无法加载，请重新刷新一下~')
+      }
+    },
+    // 获取视频详情
+    async getVideoDetail() {
+      const res = await this.$api.getVideoDetail(this.videoId)
+      if (res.code === 200) {
+        res.data.videoGroup.forEach(item => {
+          item.name = item.name.replace(/#/g, '')
+        })
+        this.detail = res.data
+        this.creator = res.data.creator
+      }
+    },
+    // 获取视频的点赞、转发、评论数
+    async getVideoDetailInfo() {
+      let timestamp = new Date().getTime()
+      const params = {
+        vid: this.videoId,
+        timestamp
+      }
+      const res = await this.$api.getVideoDetailInfo(params)
+      if (res.code === 200) {
+        const detail = {
+          isLike: res.liked,
+          likedCount: res.likedCount,
+          shareCount: res.shareCount,
+          commentCount: res.commentCount
+        }
+        this.videoDetailInfo = detail
+      }
+    },
+    // 获取视频评论
+    async getVideoComments() {
+      let timestamp = new Date().getTime()
+      const params = {
+        id: this.videoId,
+        limit: this.limit,
+        offset: this.offset,
+        timestamp
+      }
+      const res = await this.$api.getVideoComments(params)
+      if (res.code === 200) {
+        this.commentTotal = res.total
+        this.hotComments = res.hotComments || []
+        this.comments = res.comments || []
+      }
+    },
+    // 获取相关视频
+    async getVideoRelated() {
+      const res = await this.$api.getVideoRelated(this.videoId)
+      if (res.code === 200) {
+        this.relatedList = res.data
+      }
+    },
+    // 跳转到视频详情页面或直播页面
+    toDetailOrLive(id, isLive) {
+      if (isLive) {
+        // 新窗口打开
+        window.open(`https://iplay.163.com/live?id=${id}`, '_blank')
+      } else {
+        this.$router.push({
+          path: '/videodetail',
+          query: { id }
+        })
+      }
+    },
+    // 跳转到用户页面
+    toUser(id) {
+      this.$router.push({
+        path: '/personal',
+        query: { id }
+      })
+    },
+    // 点击标签跳转到视频列表页面
+    toVideo(tagId, tagName) {
+      this.$router.push({
+        name: 'video',
+        params: {
+          id: tagId,
+          name: tagName
+        }
+      })
+    },
+    // 改变每页显示的评论个数
+    handleSizeChange(val) {
+      this.limit = val
+      this.offset = val * (this.currentPage - 1)
+      this.getVideoComments()
+    },
+    // 改变评论页码
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.offset = (val - 1) * this.limit
+      this.getVideoComments()
+    },
+    // 初始化
+    _initailze() {
+      this.getVideoUrl()
+      this.getVideoDetail()
+      this.getVideoDetailInfo()
+      this.getVideoComments()
+      this.getVideoRelated()
+    }
   }
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+.card-header {
+  height: 20px;
+  padding-left: 14px;
+  margin-bottom: 15px;
+  border-left: 3px solid #fa2800;
+  font-weight: 700;
+}
+.video-detail {
+  display: flex;
+  .left {
+    flex: 1;
+    padding: 15px;
+    margin-right: 20px;
+    border-radius: 8px;
+    .video-container {
+      // 视频播放器占位
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+      video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        border-radius: 3px;
+        background-color: #333;
+      }
+    }
+    .video-foot {
+      margin-top: 8px;
+      .tag {
+        margin: 10px 0 8px;
+        cursor: pointer;
+        a {
+          display: inline-block;
+          padding: 5px 15px;
+          margin-right: 15px;
+          border-radius: 15px;
+          color: #fff;
+          font-weight: normal;
+          background-color: #fa2800;
+        }
+      }
+      p {
+        span {
+          margin-right: 30px;
+          font-size: 12px;
+          color: #999;
+        }
+      }
+      .follow {
+        margin-top: 10px;
+        .box {
+          display: flex;
+          align-items: center;
+          padding: 0 10px;
+          border-radius: 15px;
+          margin-right: 15px;
+          text-align: center;
+          background-color: #f2f2f2;
+          color: #161e27;
+          cursor: pointer;
+          i {
+            font-size: 26px;
+          }
+          &.active {
+            color: #fff;
+            background-color: #fa2800;
+          }
+        }
+      }
+    }
+    .comment-wrap {
+      margin-top: 25px;
+      .title {
+        width: 100%;
+        height: 50px;
+        border-bottom: 1px solid #f1f1f1;
+        i {
+          margin-right: 10px;
+          font-size: 18px;
+          color: #666;
+        }
+        span {
+          margin-left: 5px;
+        }
+      }
+      .comment-list {
+        width: 100%;
+        margin-top: 20px;
+        .el-pagination {
+          margin-top: 20px;
+        }
+      }
+    }
+  }
+  .right {
+    flex-shrink: 0;
+    width: 350px;
+    .module {
+      width: 100%;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+    }
+    .introduction {
+      .author {
+        display: flex;
+        align-items: center;
+        margin: 5px 0 15px;
+        .avatar {
+          width: 40px;
+          height: 40px;
+          margin-right: 15px;
+          border-radius: 50%;
+          cursor: pointer;
+          img {
+            width: 100%;
+            border-radius: 50%;
+          }
+        }
+        .name {
+          flex: 1;
+          cursor: pointer;
+        }
+      }
+    }
+    .related {
+      .mv-list {
+        flex-wrap: wrap;
+        margin: 0 -15px;
+        padding: 15px 0;
+        li {
+          flex: 0 0 100%;
+          max-width: 100%;
+          padding: 0 15px 20px;
+          .cover {
+            // 图片未加载完成占位
+            position: relative;
+            padding-top: 56%;
+            border-radius: 5px;
+            cursor: pointer;
+            .el-image {
+              position: absolute;
+              top: 0;
+              left: 0;
+              z-index: 1;
+              width: 100%;
+              height: 100%;
+              border-radius: 5px;
+              overflow: hidden;
+              ::v-deep img {
+                transition: transform 0.3s;
+              }
+            }
+            .top {
+              position: absolute;
+              top: 0;
+              left: 0;
+              z-index: 2;
+              width: 100%;
+              padding: 5px 10px;
+              border-top-left-radius: 5px;
+              border-top-right-radius: 5px;
+              color: #f3f3f3;
+              font-weight: 500;
+              background-image: linear-gradient(
+                to bottom,
+                rgba(0, 0, 0, 0.7),
+                transparent
+              );
+              .count {
+                i {
+                  display: inline-block;
+                  width: 0;
+                  height: 0;
+                  border-style: solid;
+                  border-width: 5px 0 5px 6px;
+                  border-color: transparent transparent transparent #fff;
+                  margin-right: 5px;
+                }
+              }
+            }
+            .action {
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              z-index: 2;
+              transform: translate(-50%, -50%);
+              opacity: 0;
+              transition: opacity 0.3s;
+              .play {
+                width: 32px;
+                height: 32px;
+                padding: 0;
+                border: 0;
+                border-radius: 50%;
+                color: #fff;
+                font-size: 12px;
+                background-color: #fa2800;
+                cursor: pointer;
+                i {
+                  position: relative;
+                  left: 1px;
+                }
+              }
+            }
+            &:hover {
+              .el-image {
+                ::v-deep img {
+                  transform: scale(1.1);
+                }
+              }
+              .action {
+                opacity: 1;
+              }
+            }
+          }
+          .info {
+            margin-top: 12px;
+            color: #a5a5c1;
+            .title {
+              margin-bottom: 5px;
+              line-height: 1.3;
+              font-size: 15px;
+              font-weight: 500;
+              color: #4a4a4a;
+            }
+            span {
+              font-size: 12px;
+              color: #a5a5c1;
+            }
+          }
+          &.live {
+            .cover {
+              .top {
+                background-image: linear-gradient(
+                  to bottom,
+                  rgba(250, 40, 0, 0.75),
+                  transparent
+                );
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
 </style>

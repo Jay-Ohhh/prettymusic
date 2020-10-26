@@ -39,7 +39,7 @@
               <i class="iconfont nicebofang2 play-btn"
                 @click="playSong(item,index)"></i>
               <i class="iconfont nicezanting1 pause-btn"
-                @click="pasuceSong(item,index)"></i>
+                @click="pauseSong(item,index)"></i>
             </div>
           </td>
           <td>
@@ -121,7 +121,7 @@ export default {
       // 暂停时再次点击歌曲前面的播放按钮
       if (
         item.id === this.getCurrentSong.id &&
-        this.getCurrentMode !== this.playMode.random
+        this.getCurrentMode !== this.getCurrentMode.random
       ) {
         this.setPlaying(true)
         return

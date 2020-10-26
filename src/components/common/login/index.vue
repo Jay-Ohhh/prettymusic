@@ -110,8 +110,8 @@ export default {
           window.sessionStorage.setItem('cookie', JSON.stringify(res.cookie))
           window.sessionStorage.setItem('token', JSON.stringify(res.token))
           window.sessionStorage.setItem('loginStatus', 'true')
-          await this.getUserDetail(res.profile.userId)
           this.setLoginStatus(true)
+          await this.getUserDetail(res.profile.userId)
           this.$msg.success('登录成功')
           this.$router.push({
             path:
