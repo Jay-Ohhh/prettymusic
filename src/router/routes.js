@@ -19,6 +19,7 @@ const playListDetail = () => import('../views/playlistdetail/index.vue')
 const singerDetail = () => import('../views/singerdetail/index.vue')
 const albumDetail = () => import('../views/albumdetail/AlbumDetail.vue')
 const videoDetail = () => import('../views/video-detail/VideoDetail.vue')
+const mvDetail = () => import('../views/mv-detail/MvDetail.vue')
 const login = () => import('../components/common/login/index.vue')
 const personal = () => import('../views/personal/Personal.vue')
 const error = () => import('../views/error/404.vue')
@@ -124,20 +125,29 @@ const appRoutes = [
         },
       },
       {
-        path: '/albumdetail',
-        name: 'albumdetail',
-        component: albumDetail,
-        meta: {
-          title: '专辑详情',
-          keepAlive: true,
-        },
-      },
-      {
         path: '/videodetail',
         name: 'videodetail',
         component: videoDetail,
         meta: {
           title: '视频详情',
+          keepAlive: true,
+        },
+      },
+      {
+        path: '/mvdetail',
+        name: 'mvdetail',
+        component: mvDetail,
+        meta: {
+          title: 'MV详情',
+          keepAlive: true,
+        },
+      },
+      {
+        path: '/albumdetail',
+        name: 'albumdetail',
+        component: albumDetail,
+        meta: {
+          title: '专辑详情',
           keepAlive: true,
         },
       },

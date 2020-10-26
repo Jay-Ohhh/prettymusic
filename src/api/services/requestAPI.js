@@ -382,3 +382,43 @@ export function commentLike(params) {
 export function getVideoRelated(id) {
   return request.get(`/related/allvideo?id=${id}`)
 }
+
+/**
+ * 获取mv播放地址
+ * @param {mv的id} id
+ */
+export function getMvUrl(id) {
+  return request.get(`/mv/url?id=${id}`)
+}
+
+/**
+ * 获取mv数据
+ * @param {mv的id} mvid
+ */
+export function getMvDetail(mvid) {
+  return request.get(`/mv/detail?mvid=${mvid}`)
+}
+
+/**
+ * 获取mv的点赞、转发、评论数
+ * @param {请求参数对象} params
+ */
+export function getMvDetailInfo(params) {
+  return request.get('/mv/detail/info', { params })
+}
+
+/**
+ * 获取mv评论
+ * @param {请求参数对象} params
+ */
+export function getMvComments(params) {
+  return request.get('/comment/mv', { params })
+}
+
+/**
+ * 获取相似mv
+ * @param {mv的id} mvid
+ */
+export function getMvRelated(mvid) {
+  return request.get(`/simi/mv?mvid=${mvid}`)
+}

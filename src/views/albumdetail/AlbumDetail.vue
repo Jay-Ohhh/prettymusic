@@ -96,7 +96,7 @@
 import { createSong } from '../../utils/untils'
 import sheetSongList from '../../components/content/SheetSongList'
 export default {
-  name: 'albumdetail',
+  name: 'albumDetail',
   data() {
     return {
       // 歌单详情

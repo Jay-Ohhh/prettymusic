@@ -1,5 +1,5 @@
 <template>
-  <!-- 视频详情页面 -->
+  <!-- MV详情页面 -->
   <div class="video-detail container">
     <!-- 左侧 -->
     <div class="left shadow">
@@ -10,10 +10,12 @@
         <video :src="videoUrl" controls controlslist="nodownload"></video>
       </div>
       <div class="video-foot">
-        <h2 class="title flex-row ellipsis">{{detail.title}}</h2>
+        <h2 class="title flex-row ellipsis">
+          <i class="iconfont nicemv24"></i>
+          {{detail.name}}
+        </h2>
         <div class="tag">
-          <a v-for="item of detail.videoGroup" :key="item.id"
-            @click="toVideo(item.id,item.name)">
+          <a v-for="item of detail.videoGroup" :key="item.id">
             {{item.name}}
           </a>
         </div>
@@ -30,7 +32,7 @@
           </div>
           <div class="box">
             <i class="iconfont niceshoucang2 icon-collection"></i>
-            {{ detail.subscribeCount }}
+            {{ detail.subCount }}
           </div>
           <!-- 分享功能没写 -->
           <div class="box">
@@ -100,14 +102,14 @@
         <div class="card-header flex-row">
           <span>视频简介</span>
         </div>
-        <div class="author">
-          <div class="avatar" @click="toUser(creator.userId)">
-            <img :src="creator.avatarUrl" alt="">
+        <div class="author" v-for="artist of artists" :key="artist.id">
+          <div class="avatar" @click="toSinger(artist.id)">
+            <img :src="artist.img1v1Url" alt="">
           </div>
-          <p class="name" @click="toUser(creator.userId)">{{creator.nickname}}
+          <p class="name" @click="toSinger(artist.id)">{{artist.name}}
           </p>
         </div>
-        <p v-if="detail.description">{{detail.description}}
+        <p v-if="detail.desc">{{detail.desc}}
         </p>
         <p v-else>视频暂无简介~</p>
       </div>
@@ -123,7 +125,7 @@
             :key="item.vid">
             <div class="cover" @click="toDetailOrLive(item.vid,item.isLive)">
               <!-- 图片 -->
-              <el-image :src="item.coverUrl">
+              <el-image :src="item.cover">
                 <!-- el-image 加载失败时内容 -->
                 <div slot="error" class="image-slot">
                   <i class="el-icon-picture-outline"
@@ -133,9 +135,9 @@
               <!-- 播放数 播放时长 -->
               <div class="top flex-between">
                 <span class="count">
-                  <i class="arrow"></i>{{item.playTime | transNum(1)}}
+                  <i class="arrow"></i>{{item.playCount | transNum(1)}}
                 </span>
-                <span>{{item.durationms | formatTime}}</span>
+                <span>{{item.duration | formatTime}}</span>
               </div>
               <!-- 播放按钮 -->
               <div class="action">
@@ -145,9 +147,12 @@
               </div>
             </div>
             <div class="info">
-              <h2 class="title ellipsis">{{item.title}}</h2>
-              By<span v-for="author of item.creator" :key="author.userId">
-                <small>&emsp;{{author.userName}}&emsp;</small>
+              <h2 class="title ellipsis">
+                <i class="iconfont nicemv24"></i>
+                {{item.name}}
+              </h2>
+              By<span v-for="author of item.artists" :key="author.id">
+                <small>&emsp;{{author.name}}&emsp;</small>
               </span>
             </div>
           </li>
@@ -163,7 +168,6 @@ import commentBox from '../../components/content/CommentBox'
 import commentLine from '../../components/content/CommentLine'
 import prettyEmpty from '../../components/common/PrettyEmpty'
 export default {
-  name: 'videoDetail',
   data() {
     return {
       // 当前页码
@@ -177,8 +181,8 @@ export default {
       commentTotal: 0,
       // 视频详情
       detail: {},
-      // 作者
-      creator: {},
+      // 创作歌手数组
+      artists: [],
       // 相关视频
       relatedList: [],
       // 热评
@@ -217,7 +221,7 @@ export default {
         let timestamp = new Date().getTime()
         const params = {
           // 0歌曲 1mv 2歌单 3专辑 4电台 5视频 6动态
-          type: 5,
+          type: 1,
           id: this.videoId,
           content,
           timestamp
@@ -238,8 +242,8 @@ export default {
           this.$nextTick(() => {
             this.clearText = false
           })
-          this.getVideoDetailInfo()
-          this.getVideoComments()
+          this.getMvDetailInfo()
+          this.getMvComments()
         }
       }
     },
@@ -259,7 +263,7 @@ export default {
         id: this.videoId,
         cid,
         // 0歌曲 1mv 2歌单 3专辑 4电台 5视频 6动态
-        type: 5,
+        type: 1,
         timestamp
       }
       if (liked) {
@@ -271,7 +275,7 @@ export default {
       }
       const res = await this.$api.commentLike(params)
       if (res.code === 200) {
-        this.getVideoComments(this.videoId)
+        this.getMvComments(this.videoId)
       }
     },
     // 删除评论
@@ -281,7 +285,7 @@ export default {
         // 0删除 1发布 2回复
         t: 0,
         // 0歌曲 1mv 2歌单 3专辑 4电台 5视频 6动态
-        type: 5,
+        type: 1,
         id: this.videoId,
         commentId: id,
         timestamp
@@ -289,14 +293,14 @@ export default {
       const res = await this.$api.commentDelete(params)
       if (res.code === 200) {
         this.$msg.success('删除成功')
-        this.getVideoDetailInfo()
-        this.getVideoComments()
+        this.getMvDetailInfo()
+        this.getMvComments()
       }
     },
     // 资源点赞/取消点赞
     async likeResource() {
       // 1mv 4电台 5视频 6动态
-      let type = 5
+      let type = 1
       // 1点赞 其余为取消点赞
       let t = 1
       if (this.videoDetailInfo.isLike) {
@@ -311,39 +315,39 @@ export default {
       }
       const res = await this.$api.likeResource(params)
       if (res.code === 200) {
-        this.getVideoDetailInfo()
+        this.getMvDetailInfo()
       }
     },
-    // 获取视频播放地址
-    async getVideoUrl() {
+    // 获取mv播放地址
+    async getMvUrl() {
       try {
-        const res = await this.$api.getVideoUrl(this.videoId)
+        const res = await this.$api.getMvUrl(this.videoId)
         if (res.code === 200) {
-          this.videoUrl = res.urls[0].url
+          this.videoUrl = res.data.url
         }
       } catch (e) {
         this.$msg('视频无法加载，请重新刷新一下~')
       }
     },
-    // 获取视频详情
-    async getVideoDetail() {
-      const res = await this.$api.getVideoDetail(this.videoId)
+    // 获取mv数据
+    async getMvDetail() {
+      const res = await this.$api.getMvDetail(this.videoId)
       if (res.code === 200) {
         res.data.videoGroup.forEach(item => {
           item.name = item.name.replace(/#/g, '')
         })
         this.detail = res.data
-        this.creator = res.data.creator
+        this.artists = res.data.artists
       }
     },
-    // 获取视频的点赞、转发、评论数
-    async getVideoDetailInfo() {
+    // 获取mv的点赞、转发、评论数
+    async getMvDetailInfo() {
       let timestamp = new Date().getTime()
       const params = {
-        vid: this.videoId,
+        mvid: this.videoId,
         timestamp
       }
-      const res = await this.$api.getVideoDetailInfo(params)
+      const res = await this.$api.getMvDetailInfo(params)
       if (res.code === 200) {
         const detail = {
           isLike: res.liked,
@@ -354,8 +358,8 @@ export default {
         this.videoDetailInfo = detail
       }
     },
-    // 获取视频评论
-    async getVideoComments() {
+    // 获取mv评论
+    async getMvComments() {
       let timestamp = new Date().getTime()
       const params = {
         id: this.videoId,
@@ -363,18 +367,18 @@ export default {
         offset: this.offset,
         timestamp
       }
-      const res = await this.$api.getVideoComments(params)
+      const res = await this.$api.getMvComments(params)
       if (res.code === 200) {
         this.commentTotal = res.total
         this.hotComments = res.hotComments || []
         this.comments = res.comments || []
       }
     },
-    // 获取相关视频
-    async getVideoRelated() {
-      const res = await this.$api.getVideoRelated(this.videoId)
+    // 获取相似mv
+    async getMvRelated() {
+      const res = await this.$api.getMvRelated(this.videoId)
       if (res.code === 200) {
-        this.relatedList = res.data
+        this.relatedList = res.mvs
       }
     },
     // 跳转到视频详情页面或直播页面
@@ -384,47 +388,37 @@ export default {
         window.open(`https://iplay.163.com/live?id=${id}`, '_blank')
       } else {
         this.$router.push({
-          path: '/videodetail',
+          path: '/mvdetail',
           query: { id }
         })
       }
     },
-    // 跳转到用户页面
-    toUser(id) {
+    // 跳转到歌手详情页面
+    toSinger(id) {
       this.$router.push({
-        path: '/personal',
+        path: '/singerdetail',
         query: { id }
-      })
-    },
-    // 点击标签跳转到视频列表页面
-    toVideo(tagId, tagName) {
-      this.$router.push({
-        name: 'video',
-        params: {
-          id: tagId,
-          name: tagName
-        }
       })
     },
     // 改变每页显示的评论个数
     handleSizeChange(val) {
       this.limit = val
       this.offset = val * (this.currentPage - 1)
-      this.getVideoComments()
+      this.getMvComments()
     },
     // 改变评论页码
     handleCurrentChange(val) {
       this.currentPage = val
       this.offset = (val - 1) * this.limit
-      this.getVideoComments()
+      this.getMvComments()
     },
     // 初始化
     _initailze() {
-      this.getVideoUrl()
-      this.getVideoDetail()
-      this.getVideoDetailInfo()
-      this.getVideoComments()
-      this.getVideoRelated()
+      this.getMvUrl()
+      this.getMvDetail()
+      this.getMvDetailInfo()
+      this.getMvComments()
+      this.getMvRelated()
     }
   }
 }
@@ -461,9 +455,16 @@ export default {
     }
     .video-foot {
       margin-top: 8px;
+      h2 {
+        i {
+          margin-right: 10px;
+          font-size: 26px;
+          color: #f0280d;
+        }
+      }
       .tag {
         margin: 10px 0 8px;
-        cursor: pointer;
+        cursor: default;
         a {
           display: inline-block;
           padding: 5px 15px;
@@ -664,6 +665,11 @@ export default {
               font-size: 15px;
               font-weight: 500;
               color: #4a4a4a;
+              i {
+                margin-right: 10px;
+                font-size: 26px;
+                color: #f0280d;
+              }
             }
             span {
               font-size: 12px;
