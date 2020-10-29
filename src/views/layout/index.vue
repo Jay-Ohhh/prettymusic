@@ -1,7 +1,8 @@
 <template>
   <!-- 布局组件，用于页面的布局（登录页面除外） -->
   <!-- 由于视频页面的整体高度较小，因此需要用一个类名单独设置 -->
-  <div class="layout" :class="$route.path==='/video'?'layout-video':''">
+  <div class="layout" :class="$route.path==='/video'?'layout-video':''"
+    @click="hideLyricAndList=true">
     <!-- 顶部导航 -->
     <pretty-header></pretty-header>
     <!-- 主体区域 -->
@@ -9,7 +10,7 @@
       <!-- 需要考虑哪些路由keep-alive对于用户体验比较好 -->
       <!-- max 最多可以缓存多少组件实例。一旦这个数字达到了，在新实例被创建之前，已缓存组件中最久没有被访问的实例会被销毁掉 -->
       <keep-alive
-        include="rank,singer,personal,singerDetail,playListDetail,videoDetail,mvDetail,albumDetail"
+        include="rank,singer,personal,singerDetail,playListDetail,videoDetail,mvDetail,albumDetail,search"
         :max="4">
         <router-view :key="$route.fullPath"></router-view>
       </keep-alive>

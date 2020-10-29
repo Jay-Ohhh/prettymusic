@@ -4,7 +4,7 @@
     <li class="wrapper" v-for="item in albums" :key="item.id"
       @click="toDetail(item.id)">
       <div class="cover">
-        <el-image :src="item.picUrl" lazy>
+        <el-image :src="item.picUrl+'?param=300y300'" lazy>
           <div slot="error" class="image-slot">
             <i class="el-icon-picture-outline"></i>
           </div>

@@ -45,7 +45,7 @@
           <td>
             <div class="name-container">
               <div class="avatar">
-                <el-image :src="item.picUrl" lazy>
+                <el-image :src="item.picUrl+'?param=80y80'" lazy>
                   <div slot="error" class="image-slot">
                     <i class="iconfont niceicon-3"></i>
                   </div>
@@ -154,7 +154,9 @@ tbody {
   img {
     border-radius: 5px;
   }
-  span,
+  span {
+    cursor: default;
+  }
   i {
     cursor: pointer;
   }

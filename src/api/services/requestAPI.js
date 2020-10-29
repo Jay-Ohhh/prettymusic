@@ -422,3 +422,19 @@ export function getMvComments(params) {
 export function getMvRelated(mvid) {
   return request.get(`/simi/mv?mvid=${mvid}`)
 }
+
+/**
+ * 搜索建议
+ * @param {关键词} keywords
+ */
+export function searchSuggest(keywords) {
+  return request.get(`/search/suggest?keywords=${keywords}`)
+}
+
+/**
+ * 搜索，调用此接口 , 传入搜索关键词可以搜索该音乐 / 专辑 / 歌手 / 歌单 / 用户 , 关键词可以多个 , 以空格隔开
+ * @param {请求参数对象} params
+ */
+export function search(params) {
+  return request.get('/cloudsearch', { params })
+}

@@ -13,7 +13,7 @@
           <!-- 输入框 -->
           <div class="search-form">
             <input class="search-input" type="text" v-model="keyword"
-              placeholder="请输入搜索关键词" @keyup.enter="search">
+              ref="input" placeholder="请输入搜索关键词" @keyup.enter="search">
             <i class="iconfont nicesearch-o" @click="search"></i>
           </div>
         </div>
@@ -26,8 +26,9 @@
           </div>
           <ul class="tags">
             <li v-for="item in getSearchHistory" :key="item">
-              <a class="btn flex-row" @click="tag(item)">{{item}}<i
-                  class="close-dark" @click.stop="deleteItem(item)"></i></a>
+              <a class="btn flex-row" @click="tag(item)">{{item}}
+                <!-- stop阻止冒泡到a标签的点击事件 -->
+                <i class="close-dark" @click.stop="deleteItem(item)"></i></a>
             </li>
           </ul>
         </div>
@@ -120,6 +121,9 @@ export default {
   },
   created() {
     this.getSearchHot()
+  },
+  mounted() {
+    this.$refs.input.focus()
   }
 }
 </script>

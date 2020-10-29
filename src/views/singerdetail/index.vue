@@ -7,7 +7,7 @@
         <div class="top-mask">
           <div class="singer-box flex-column flex-center">
             <div class="avatar transition">
-              <img :src="detail.img1v1Url" alt="">
+              <img :src="detail.img1v1Url+'?param=200y200'" alt="">
               <div class="level flex-center" v-show="level">
                 <i :class="['iconfont','icon-level',level]"></i>
               </div>

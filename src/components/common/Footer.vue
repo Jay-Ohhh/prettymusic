@@ -18,21 +18,34 @@
     <div class="copyright">
       <div class="container">
         <p>
-          <span>Copyright © 2019-2020</span>
-          <a href="https://gitee.com/Jay_Ohhh/prettrymusic" target="_blank">
-            prettymusic 演示站. </a>
+          <span>Copyright © 2020
+            <span v-if="currentYear!==2020">-{{currentYear}}</span>
+          </span>
+          <a href="https://gitee.com/Jay_Ohhh" target="_blank">Jay_Ohhh</a>
+          All rights reserved.
           <span>Improved by <a href="https://gitee.com/Jay_Ohhh"
               target="_blank">Jay_Ohhh</a> &
             Designed by <a href="https://www.lxhcool.cn/"
-              target="_blank">lxhcool.</a></span>
+              target="_blank">lxhcool.</a>
+          </span><br />
         </p>
+        <a class="project-address"
+          href="https://gitee.com/Jay_Ohhh/prettrymusic" target="_blank">
+          prettymusic项目地址
+        </a>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      currentYear: new Date().getFullYear()
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -85,9 +98,13 @@ export default {}
     border-top: 1px solid #232a31;
     color: #6d7685;
     .container {
-      padding: 20px 10px;
+      padding: 20px 10px 30px;
       a {
         color: #5829a3;
+      }
+      .project-address {
+        display: inline-block;
+        margin-top: 5px;
       }
     }
   }

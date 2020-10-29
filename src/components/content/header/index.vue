@@ -60,7 +60,7 @@
       </div>
     </div>
     <!-- 搜索框 -->
-    <search-input :open-search.sync="openSearch" v-show="openSearch">
+    <search-input :open-search.sync="openSearch" v-if="openSearch">
     </search-input>
   </div>
 </template>
@@ -96,6 +96,11 @@ export default {
     }
   },
   components: { searchInput },
+  watch: {
+    $route(newVal) {
+      this.openSearch = false
+    }
+  },
   methods: {
     // 点击下拉菜单项触发的事件回调
     handleCommand(command) {

@@ -15,13 +15,25 @@ const video = () =>
   import(/* webpackChunkName: "group-navgation" */ '../views/video/index.vue')
 const mv = () =>
   import(/* webpackChunkName: "group-navgation" */ '../views/mv/index.vue')
-const playListDetail = () => import('../views/playlistdetail/index.vue')
-const singerDetail = () => import('../views/singerdetail/index.vue')
-const albumDetail = () => import('../views/albumdetail/AlbumDetail.vue')
-const videoDetail = () => import('../views/video-detail/VideoDetail.vue')
-const mvDetail = () => import('../views/mv-detail/MvDetail.vue')
+
+const playListDetail = () =>
+  import(/* webpackChunkName: "detail" */ '../views/playlistdetail/index.vue')
+const singerDetail = () =>
+  import(/* webpackChunkName: "detail" */ '../views/singerdetail/index.vue')
+const albumDetail = () =>
+  import(
+    /* webpackChunkName: "detail" */ '../views/albumdetail/AlbumDetail.vue'
+  )
+const videoDetail = () =>
+  import(
+    /* webpackChunkName: "detail" */ '../views/video-detail/VideoDetail.vue'
+  )
+const mvDetail = () =>
+  import(/* webpackChunkName: "detail" */ '../views/mv-detail/MvDetail.vue')
+
 const login = () => import('../components/common/login/index.vue')
 const personal = () => import('../views/personal/Personal.vue')
+const search = () => import('../views/search/Search.vue')
 const error = () => import('../views/error/404.vue')
 
 const loginRouter = {
@@ -158,6 +170,15 @@ const appRoutes = [
         meta: {
           title: '用户',
           keepAlive: true,
+        },
+      },
+      {
+        path: '/search',
+        name: 'search',
+        component: search,
+        meta: {
+          title: '搜索',
+          keepAlive: false,
         },
       },
     ],

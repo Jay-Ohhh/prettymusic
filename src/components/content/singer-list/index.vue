@@ -4,7 +4,7 @@
     <li class="item" v-for="item in singers" :key="item.id"
       @click="toSingerDetail(item)">
       <div class="img-wrapper shadow">
-        <el-image :src="item.img1v1Url" lazy>
+        <el-image :src="item.img1v1Url+'?param=200y200'" lazy>
           <!-- el-image 加载时占位 -->
           <!-- <div slot="placeholder" class="image-slot flex-center">
             加载中<span class="dot">...</span>

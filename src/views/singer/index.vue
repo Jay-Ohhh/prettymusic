@@ -26,9 +26,7 @@
     </div>
     <!-- 触底加载更多 -->
     <load-more @loadmore="loadMore">
-      <ul class="singer-list">
-        <singer-list :singers="singers"></singer-list>
-      </ul>
+      <singer-list :singers="singers"></singer-list>
     </load-more>
     <loading-icon v-if="showLoadIcon" :loading-text="'努力加载中~'"></loading-icon>
   </div>

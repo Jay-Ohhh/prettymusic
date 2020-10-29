@@ -875,11 +875,11 @@ export default {
       line-height: 25px;
       text-align: center;
       cursor: pointer;
-      transition: background-color 0.3s;
+      transition: background-color 0.2s;
       &:hover {
         background-color: #f1f1f1;
         .close-icon {
-          transform: scale(1.2) rotate(45deg);
+          transform: scale(1.1) rotate(45deg);
           background-color: #f1f1f1;
         }
       }
@@ -891,7 +891,7 @@ export default {
         border-bottom: 1px solid #4a4a4a;
         transform: rotate(45deg);
         background-color: #fff;
-        transition: transform 0.3s, background-color 0.3s;
+        transition: transform 0.2s, background-color 0.2s;
       }
     }
   }
