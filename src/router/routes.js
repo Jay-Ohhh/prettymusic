@@ -54,6 +54,7 @@ const pageError = {
   component: error,
   meta: {
     title: '404-您访问的页面不存在',
+    keepAlive: false,
   },
 }
 

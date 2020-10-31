@@ -22,12 +22,19 @@ const router = new VueRouter({
 
 // 路由全局前置守卫
 router.beforeEach((to, from, next) => {
-  if (to.path === '/login' && from.path !== '/') {
+  // 判断是不是404页面
+  // router.resolve 解析目标位置
+  let isErrorPage = router.resolve(from.path).route.name === '404'
+  if (to.path === '/login' && from.path !== '/' && !isErrorPage) {
     // 首页的地址是'/home'
     // 登录页面刷新：from.path是'/'，即登录页面刷新不会进行以下操作
     // 这里用vuex和sessionStorage保存登录之前的页面
     store.commit('setBackPath', from.fullPath)
     sessionStorage.setItem('backPath', JSON.stringify(from.fullPath))
+  } else if (to.path === '/login' && isErrorPage) {
+    // 404页面跳转到登录页面登录后重定向至首页
+    store.commit('setBackPath', '/home')
+    sessionStorage.setItem('backPath', '/home')
   }
   next()
 })
