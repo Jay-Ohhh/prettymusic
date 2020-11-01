@@ -70,7 +70,7 @@ export default {
   .main {
     // 设置最小高度是为了刷新页面时对空白部分进行占位，让页脚出现在上方
     min-height: 970px;
-    margin-top: 70px;
+    margin-top: 95px;
   }
 }
 .layout.layout-video {

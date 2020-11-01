@@ -4,7 +4,7 @@
     <!-- container的样式已在common.css中写好 -->
     <div class="container">
       <p class="title">prettymusic</p>
-      <p class="desc">愿每个努力生活的人都能被岁月温柔以待，祝好！</p>
+      <p class="desc">{{oneSentence}}</p>
       <!-- 两个图标 -->
       <div class="social flex-row">
         <router-link to="/home">
@@ -23,10 +23,9 @@
           </span>
           <a href="https://gitee.com/Jay_Ohhh" target="_blank">Jay_Ohhh</a>
           All rights reserved.
-          <span>Improved by <a href="https://gitee.com/Jay_Ohhh"
-              target="_blank">Jay_Ohhh</a> &
-            Designed by <a href="https://www.lxhcool.cn/"
-              target="_blank">lxhcool.</a>
+          <span>Designed by <a href="https://www.lxhcool.cn/"
+              target="_blank">lxhcool</a> & Improved by <a
+              href="https://gitee.com/Jay_Ohhh" target="_blank">Jay_Ohhh.</a>
           </span><br />
         </p>
         <a class="project-address"
@@ -39,10 +38,38 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data() {
     return {
-      currentYear: new Date().getFullYear()
+      // 当前年份
+      currentYear: new Date().getFullYear(),
+      // 网络语句
+      oneSentence: ''
+    }
+  },
+  created() {
+    this.getOneSentence()
+    setInterval(() => {
+      this.getOneSentence()
+    }, 5000)
+  },
+  methods: {
+    // 获取网络语句
+    async getOneSentence() {
+      const params = {
+        c: 'f', // 网络语句
+        min_length: 30 // 语句最少字数
+      }
+      const res = await axios.get('https://v1.hitokoto.cn/', { params })
+      if (res.status === 200) {
+        let hitokoto = res.data.hitokoto
+        // 如果最后一个字符不是句号则加上句号
+        if (hitokoto.charAt(hitokoto.length - 1) !== '。') {
+          hitokoto = hitokoto + '。'
+        }
+        this.oneSentence = hitokoto + '  -- ' + res.data.creator
+      }
     }
   }
 }
