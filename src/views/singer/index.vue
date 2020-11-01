@@ -74,7 +74,7 @@ export default {
         type: -1,
         // 地区
         area: -1,
-        // 热门或字母A-Z,热门为-1,其他为0
+        // 热门或字母A-Z,'热门'为-1,'其他'为0
         initial: -1
       },
       // 歌手列表
@@ -127,6 +127,8 @@ export default {
         this.params.initial = val
       }
       this.params.offset = 0
+      // 清空之前的歌手数据
+      this.singers = []
       this.getSingers()
     },
     // 获取歌手列表

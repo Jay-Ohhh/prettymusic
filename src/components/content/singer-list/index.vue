@@ -1,7 +1,7 @@
 <template>
   <!-- 歌手列表组件 -->
   <ul class="singer-list clearfix" v-if="singers.length>0">
-    <li class="item" v-for="item in singers" :key="item.id"
+    <li class="item" v-for="(item,index) in singers" :key="index"
       @click="toSingerDetail(item)">
       <div class="img-wrapper shadow">
         <el-image :src="item.img1v1Url+'?param=200y200'" lazy>
