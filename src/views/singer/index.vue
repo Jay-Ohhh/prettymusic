@@ -127,6 +127,8 @@ export default {
         this.params.initial = val
       }
       this.params.offset = 0
+      // 清空之前的歌手数据
+      this.singers = []
       this.getSingers()
     },
     // 获取歌手列表

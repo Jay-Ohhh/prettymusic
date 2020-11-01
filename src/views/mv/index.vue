@@ -92,6 +92,7 @@ export default {
         this.params.order = this.currentOrder = val
       }
       this.params.offset = 0
+      // 清空之前的mv数据
       this.mvs = []
       this.getMvAll()
     },
