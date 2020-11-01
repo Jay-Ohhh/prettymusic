@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import BScroll from 'better-scroll'
+// import BetterScroll from 'better-scroll'
 export default {
   props: {
     /**
@@ -86,7 +86,7 @@ export default {
         return
       }
       // better-scroll的初始化
-      this.scroll = new BScroll(this.$refs.scrollWrapper, {
+      this.scroll = BetterScroll.createBScroll(this.$refs.scrollWrapper, {
         probeType: this.probeType,
         click: this.click,
         scrollX: this.scrollX

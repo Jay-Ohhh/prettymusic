@@ -106,7 +106,7 @@ export default {
     // 提交评论
     commentSubmit() {
       if (this.loginStatus === false) {
-        this.$msg('评论请先登录')
+        ELEMENT.Message('评论请先登录')
         return
       }
       this.$emit('commentsubmit', this.commentContent)

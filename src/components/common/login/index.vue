@@ -112,18 +112,18 @@ export default {
           window.sessionStorage.setItem('loginStatus', 'true')
           this.setLoginStatus(true)
           await this.getUserDetail(res.profile.userId)
-          this.$msg.success('登录成功')
+          ELEMENT.Message.success('登录成功')
           this.$router.push({
             path:
               this.$store.state.backPath ||
               JSON.parse(sessionStorage.getItem('backPath'))
           })
         } else {
-          this.$msg.error('登录失败，请重试')
+          ELEMENT.Message.error('登录失败，请重试')
         }
         this.loginLoading = false
       } catch (e) {
-        this.$msg.error('登录失败，请重试')
+        ELEMENT.Message.error('登录失败，请重试')
         this.loginLoading = false
       }
     },

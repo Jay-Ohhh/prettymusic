@@ -429,8 +429,8 @@ export default {
       // 缓存完成或超过5s都会将this.songReady设置为true
       // 而歌曲错误，也需要将this.songReady设置为true，避免影响其他歌曲播放
       this.songReady = true
-      if (this.$msg) {
-        this.$msg('这首歌暂时没有版权~')
+      if (ELEMENT.Message) {
+        ELEMENT.Message('这首歌暂时没有版权~')
       }
     },
     // 歌曲暂停

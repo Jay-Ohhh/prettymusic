@@ -16,4 +16,37 @@ module.exports = {
       },
     },
   },
+  chainWebpack: config => {
+    config.when(process.env.NODE_ENV === 'production', config => {
+      config
+        .entry('app')
+        .clear()
+        .add('./src/main-prod.js')
+      // 通过externals加载外部CDN资源
+      config.set('externals', {
+        vue: 'Vue',
+        'vue-router': 'VueRouter',
+        vuex: 'Vuex',
+        axios: 'axios',
+        'element-ui': 'ELEMENT',
+        swiper: 'Swiper',
+        'better-scroll': 'BetterScroll',
+      })
+      // index.html自定制（生产开发模式下可显示不同的title，生产时CDN，开发时不需要CDN）
+      config.plugin('html').tap(args => {
+        args[0].isProd = true
+        return args
+      })
+    })
+    config.when(process.env.NODE_ENV === 'development', config => {
+      config
+        .entry('app')
+        .clear()
+        .add('./src/main-dev.js')
+      config.plugin('html').tap(args => {
+        args[0].isProd = false
+        return args
+      })
+    })
+  },
 }

@@ -214,7 +214,7 @@ export default {
     },
     // 打开专辑介绍详情
     openDesc(message, title) {
-      this.$alert(message, title, {
+      ELEMENT.MessageBox.alert(message, title, {
         // 是否可通过点击遮罩关闭
         closeOnClickModal: true,
         // MessageBox 的自定义类名

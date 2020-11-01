@@ -56,7 +56,7 @@ export function login(phone, password) {
   return request.post('/login/cellphone', {
     phone,
     password,
-    timestamp: Date.now(),
+    timestamp: new Date().getTime(),
   })
 }
 /**

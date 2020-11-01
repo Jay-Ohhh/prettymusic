@@ -9,6 +9,36 @@
     />
     <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
     <title>prettymusic - 属于你的音乐世界</title>
+    <!-- 按需加载外部的CDN资源 -->
+    <% if(htmlWebpackPlugin.options.isProd) { %>
+    <!-- 引入样式 -->
+    <!-- element-ui 样式 -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/element-ui@2.13.2/lib/theme-chalk/index.css"
+    />
+    <!-- swiper 样式 -->
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/Swiper/5.4.5/css/swiper.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- 引入组件库代码 -->
+    <!-- vue -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <!-- vue-router -->
+    <script src="https://unpkg.com/vue-router@3.4.3/dist/vue-router.js"></script>
+    <!-- vuex -->
+    <script src="https://unpkg.com/vuex@3.5.1"></script>
+    <!-- element-ui -->
+    <script src="https://unpkg.com/element-ui@2.13.2/lib/index.js"></script>
+    <!-- axios -->
+    <script src="https://unpkg.com/axios@0.20.0/dist/axios.min.js"></script>
+    <!-- swiper -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/Swiper/5.4.5/js/swiper.min.js"></script>
+    <!-- better-scroll -->
+    <script src="https://unpkg.com/better-scroll@2.0.3/dist/better-scroll.min.js"></script>
+    <% } %>
   </head>
   <body>
     <div id="app"></div>

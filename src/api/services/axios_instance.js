@@ -1,7 +1,7 @@
-import axios from 'axios'
+// import axios from 'axios'
 import router from '../../router'
 // 单独引用，此时调用方法为 Message(options)
-import { Message } from 'element-ui'
+// import { Message } from 'element-ui'
 
 // 在node中，有全局变量process表示的是当前的node进程
 // process.env包含着关于系统环境的信息
@@ -62,4 +62,5 @@ request.interceptors.response.use(
     return Promise.reject(error)
   },
 )
+
 export { request }
