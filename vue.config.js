@@ -11,7 +11,7 @@ module.exports = {
   },
   // 部署到gitee pages 才需要写这一行代码，prettrymusic是远程仓库路径
   // 如果是在生产环境下用服务器启动项目，npm run build压缩时一定要注释掉这一行代码
-  // publicPath: process.env.NODE_ENV === 'production' ? '/prettrymusic/' : '/',
+  publicPath: process.env.NODE_ENV === 'production' ? '/prettrymusic/' : '/',
   configureWebpack: {
     resolve: {
       alias: {
