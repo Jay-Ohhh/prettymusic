@@ -312,7 +312,7 @@ export default {
     },
     // 打开歌单介绍详情
     openDesc(message, title) {
-      ELEMENT.MessageBox.alert(message, title, {
+      this.$alert(message, title, {
         // 是否可通过点击遮罩关闭
         closeOnClickModal: true,
         // MessageBox 的自定义类名
@@ -333,7 +333,7 @@ export default {
         let message = this.detail.subscribed ? '已取消收藏' : '收藏成功'
         // 如果已收藏过该歌单
         if (this.detail.subscribed) {
-          ELEMENT.MessageBox.confirm('确认取消收藏该歌单', '提示', {
+          this.$confirm('确认取消收藏该歌单', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'info'
@@ -344,7 +344,7 @@ export default {
               const res = await this.$api.collectArtist(t, this.artistId)
               if (res.code === 200) {
                 this.detail.subscribed = !this.detail.subscribed
-                ELEMENT.Message.success(message)
+                this.$msg.success(message)
                 // 刷新收藏者
                 this.getSubscribers(this.artistId)
               }
@@ -356,13 +356,13 @@ export default {
           const res = await this.$api.collectArtist(t, this.artistId)
           if (res.code === 200) {
             this.detail.subscribed = !this.detail.subscribed
-            ELEMENT.Message.success(message)
+            this.$msg.success(message)
             // 刷新收藏者
             this.getSubscribers(this.artistId)
           }
         }
       } else {
-        ELEMENT.Message('请先登录')
+        this.$msg('请先登录')
         setTimeout(() => {
           this.$router.push('/login')
         }, 500)

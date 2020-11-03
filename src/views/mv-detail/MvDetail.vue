@@ -215,7 +215,7 @@ export default {
     // 发送评论
     async commentSubmit(content) {
       if (content.trim() === '') {
-        ELEMENT.Message('请输入内容')
+        this.$msg('请输入内容')
         return
       } else {
         let timestamp = new Date().getTime()
@@ -236,7 +236,7 @@ export default {
         }
         const res = await this.$api.commentSubmit(params)
         if (res.code === 200) {
-          ELEMENT.Message.success('提交成功')
+          this.$msg.success('提交成功')
           this.currentCommentId = ''
           this.clearText = true
           this.$nextTick(() => {
@@ -292,7 +292,7 @@ export default {
       }
       const res = await this.$api.commentDelete(params)
       if (res.code === 200) {
-        ELEMENT.Message.success('删除成功')
+        this.$msg.success('删除成功')
         this.getMvDetailInfo()
         this.getMvComments()
       }
@@ -326,7 +326,7 @@ export default {
           this.videoUrl = res.data.url
         }
       } catch (e) {
-        ELEMENT.Message('视频无法加载，请重新刷新一下~')
+        this.$msg('视频无法加载，请重新刷新一下~')
       }
     },
     // 获取mv数据

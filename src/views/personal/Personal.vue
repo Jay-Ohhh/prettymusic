@@ -187,7 +187,7 @@ export default {
           }
         }
       } else {
-        ELEMENT.Message('请先登录')
+        this.$msg('请先登录')
         this.$router.push('/login')
       }
     },

@@ -214,16 +214,18 @@ export default {
     },
     // 打开专辑介绍详情
     openDesc(message, title) {
-      ELEMENT.MessageBox.alert(message, title, {
-        // 是否可通过点击遮罩关闭
-        closeOnClickModal: true,
-        // MessageBox 的自定义类名
-        customClass: 'descBox',
-        // 是否显示确认按钮
-        showConfirmButton: false,
-        // 是否将 message 属性作为 HTML 片段处理
-        dangerouslyUseHTMLString: true
-      }).catch(e => {})
+      this.$msgBox
+        .alert(message, title, {
+          // 是否可通过点击遮罩关闭
+          closeOnClickModal: true,
+          // MessageBox 的自定义类名
+          customClass: 'descBox',
+          // 是否显示确认按钮
+          showConfirmButton: false,
+          // 是否将 message 属性作为 HTML 片段处理
+          dangerouslyUseHTMLString: true
+        })
+        .catch(e => {})
     },
     // 跳转到专辑详情页面
     toAlbumDetail(id) {

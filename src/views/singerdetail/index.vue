@@ -299,7 +299,7 @@ export default {
       // 判断有没有登录
       if (sessionStorage.getItem('cookie') && sessionStorage.getItem('token')) {
         if (this.followed) {
-          ELEMENT.MessageBox.confirm('确认取消收藏歌手', '提示', {
+          this.$confirm('确认取消收藏歌手', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'info'
@@ -318,7 +318,7 @@ export default {
           }
         }
       } else {
-        ELEMENT.Message('请先登录')
+        this.$msg('请先登录')
         this.$router.push('/login')
       }
     },

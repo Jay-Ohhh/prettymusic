@@ -5,6 +5,8 @@
 </template>
 
 <script>
+// 如果是CDN引入，则不需改行代码，具体参考
+// https://github.com/ustbhuangyi/better-scroll/blob/master/README_zh-CN.md
 // import BetterScroll from 'better-scroll'
 export default {
   props: {

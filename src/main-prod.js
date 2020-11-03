@@ -1,10 +1,10 @@
-// import Vue from 'vue'
+import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
 import getApi from './api/index'
 
-// import './libs/element'
+import './libs/element'
 import './utils/untils'
 
 // 引入基本样式css
