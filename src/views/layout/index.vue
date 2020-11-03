@@ -1,7 +1,8 @@
 <template>
   <!-- 布局组件，用于页面的布局（登录页面除外） -->
   <!-- 由于视频页面的整体高度较小，因此需要用一个类名单独设置 -->
-  <div class="layout" :class="mainClass" @click="hideLyricAndList=true">
+  <div class="layout" :class="$route.path==='/video'?'layout-video':''"
+    @click="hideLyricAndList=true">
     <!-- 顶部导航 -->
     <pretty-header></pretty-header>
     <!-- 主体区域 -->
@@ -33,33 +34,12 @@ import bgFlyCircle from '../../components/common/Bg_Fly_Circle'
 import backTop from '../../components/common/BackTop'
 export default {
   name: 'layout',
-  data() {
-    return {
-      // 类名为main的元素的类名，用于控制其CSS高度
-      mainClass: ''
-    }
-  },
   components: {
     prettyHeader,
     playBar,
     prettyFooter,
     bgFlyCircle,
     backTop
-  },
-  watch: {
-    $route: {
-      handler(newVal) {
-        let temp = newVal.matched.findIndex(item => item.path === newVal.path)
-        if (newVal.path === '/video') {
-          this.mainClass = 'layout-video'
-        } else if (temp !== -1) {
-          this.mainClass = ''
-        } else if (temp === -1) {
-          this.mainClass = 'layout-error'
-        }
-      },
-      immediate: true
-    }
   }
 }
 </script>
@@ -76,12 +56,6 @@ export default {
 .layout.layout-video {
   .main {
     min-height: 600px;
-  }
-}
-.layout.layout-error {
-  .main {
-    height: 500px;
-    min-height: 0;
   }
 }
 </style>
