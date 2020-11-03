@@ -220,6 +220,7 @@ export default {
   transition: all 0.5s;
 }
 .video-wrap {
+  height: calc(100vh - 259px);
   .filter {
     display: flex;
     align-items: center;

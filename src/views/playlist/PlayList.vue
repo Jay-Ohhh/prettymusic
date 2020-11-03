@@ -337,5 +337,8 @@ export default {
       }
     }
   }
+  .page-wrap {
+    margin-bottom: 15px;
+  }
 }
 </style>

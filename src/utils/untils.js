@@ -40,7 +40,7 @@ Vue.filter('transNum', transNum)
 
 /**
  * 左补0补齐多少位
- * @param {filter传过来的值} val
+ * @param {数值} val
  * @param {数值要显示的长度} len
  */
 export function formatZero(val, len) {
@@ -148,7 +148,7 @@ export function shuffle(arr) {
  * 日期格式转换
  * @param {时间戳(number)，时间字符串(string)} time
  * 时间字符串格式要求：https://www.cnblogs.com/hongll/p/10483856.html
- * @param {*} type
+ * @param {日期格式} type
  */
 export function formatDate(time, type) {
   // 转换为Date对象

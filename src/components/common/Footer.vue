@@ -59,7 +59,7 @@ export default {
     async getOneSentence() {
       const params = {
         c: 'f', // 网络语句
-        min_length: 30 // 语句最少字数
+        min_length: 20 // 语句最少字数
       }
       const res = await axios.get('https://v1.hitokoto.cn/', { params })
       if (res.status === 200) {

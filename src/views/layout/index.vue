@@ -52,10 +52,8 @@ export default {
         let temp = newVal.matched.findIndex(item => item.path === newVal.path)
         if (newVal.path === '/video') {
           this.mainClass = 'layout-video'
-        } else if (temp !== -1) {
+        } else {
           this.mainClass = ''
-        } else if (temp === -1) {
-          this.mainClass = 'layout-error'
         }
       },
       immediate: true
@@ -76,12 +74,6 @@ export default {
 .layout.layout-video {
   .main {
     min-height: 600px;
-  }
-}
-.layout.layout-error {
-  .main {
-    height: 500px;
-    min-height: 0;
   }
 }
 </style>
