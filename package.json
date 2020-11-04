@@ -15,7 +15,6 @@
     "element-ui": "^2.13.2",
     "lyric-parser": "^1.0.1",
     "node-sass": "^4.14.1",
-    "qs": "^6.9.4",
     "sass-loader": "^10.0.2",
     "swiper": "^5.4.5",
     "vue": "^2.6.11",
