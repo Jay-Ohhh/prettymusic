@@ -29,27 +29,25 @@ Tips：如果遇在演示网站遇到视频页面没数据、不能发表评论�
 
 <a href="https://github.com/Binaryify/NeteaseCloudMusicApi" target="_blank" rel="noopener noreferrer" style="text-decoration:none;"> Binaryify / NeteaseCloudMusicApi </a>（网易云音乐 NodeJS 版 API）
 
-<a href="https://gitee.com/lxhcool/desktop-nicemusic?_from=gitee_search" target="_blank" rel="noopener noreferrer" style="text-decoration:none;"> One / desktop-nicemusic </a>（仿网易云音乐，UI 好好看 )
-
-本项目是基于destop-nicemusic进行了重写和优化，新增播放器歌单功能，修复调节进度条超出范围后鼠标异常bug等。Above all，优化播放器播放逻辑，优化路由跳转交互效果，优化HTML和CSS布局。
+<a href="https://gitee.com/lxhcool/desktop-nicemusic?_from=gitee_search" target="_blank" rel="noopener noreferrer" style="text-decoration:none;"> One / desktop-nicemusic </a>（仿网易云音乐 )
 
 ---
 
 ### Library
 
-| project                                  | version                                                      | description             |
-| ---------------------------------------- | ------------------------------------------------------------ | ----------------------- |
-| [vue](https://github.com/vuejs/vue)      | ![version2.6.11](https://img.shields.io/badge/npm-v2.6.11-blue) | 渐进式 JavaScript 框架  |
-| [vue-router](https://github.com/vuejs/vue-router)                 | ![version3.4.3](https://img.shields.io/badge/npm-v3.4.3-blue) | 单页面应用路由器        |
-| [vuex](https://github.com/vuejs/vuex)                             | ![version3.5.1](https://img.shields.io/badge/npm-v3.5.1-blue) | 状态管理                |
-| [axios](https://github.com/axios/axios)                           | ![version0.20.0](https://img.shields.io/badge/npm-v0.20.0-blue) | 用、简洁且高效的http库  |
-| [element-ui](https://github.com/ElemeFE/element)                 | ![version2.13.2](https://img.shields.io/badge/npm-v2.13.2-blue) | 基于vue的桌面端组件库   |
-| [vue-kinesis](https://github.com/Aminerman/vue-kinesis)               | ![version1.1.5](https://img.shields.io/badge/npm-v1.1.5-blue) | 基于vue的交互式动画组件 |
-| [swiper](https://github.com/nolimits4web/swiper)                         | ![version5.4.5](https://img.shields.io/badge/npm-v5.4.5-blue) | 页面滑动插件（轮播图）  |
-| [vue-awesome-swiper](https://github.com/surmon-china/vue-awesome-swiper) | ![version4.1.1](https://img.shields.io/badge/npm-v4.1.1-blue) | 基于vue的swiper组件     |
-| [better-scroll](https://github.com/ustbhuangyi/better-scroll)           | ![version2.0.3](https://img.shields.io/badge/npm-v2.0.3-blue) | 页面滚动插件            |
-| [lyric-parser](https://github.com/ustbhuangyi/lyric-parser)             | ![version1.0.1](https://img.shields.io/badge/npm-v1.0.1-blue) | 歌词解析插件            |
-| [sass](https://github.com/sass/sass)                             | ![最新版本](https://img.shields.io/badge/npm-latest-blue)    | CSS预处理器语言         |
+| project                                                      | version                                                      | description              |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------ |
+| [vue](https://github.com/vuejs/vue)                          | ![version2.6.11](https://img.shields.io/badge/npm-v2.6.11-blue) | 渐进式 JavaScript 框架   |
+| [vue-router](https://github.com/vuejs/vue-router)            | ![version3.4.3](https://img.shields.io/badge/npm-v3.4.3-blue) | 单页面应用路由器         |
+| [vuex](https://github.com/vuejs/vuex)                        | ![version3.5.1](https://img.shields.io/badge/npm-v3.5.1-blue) | 状态管理                 |
+| [axios](https://github.com/axios/axios)                      | ![version0.20.0](https://img.shields.io/badge/npm-v0.20.0-blue) | 易用、简洁且高效的http库 |
+| [element-ui](https://github.com/ElemeFE/element)             | ![version2.13.2](https://img.shields.io/badge/npm-v2.13.2-blue) | 基于vue的桌面端组件库    |
+| [vue-kinesis](https://github.com/Aminerman/vue-kinesis)      | ![version1.1.5](https://img.shields.io/badge/npm-v1.1.5-blue) | 基于vue的交互式动画组件  |
+| [swiper](https://github.com/nolimits4web/swiper)             | ![version5.4.5](https://img.shields.io/badge/npm-v5.4.5-blue) | 页面滑动插件（轮播图）   |
+| [vue-awesome-swiper](https://github.com/surmon-china/vue-awesome-swiper) | ![version4.1.1](https://img.shields.io/badge/npm-v4.1.1-blue) | 基于vue的swiper组件      |
+| [better-scroll](https://github.com/ustbhuangyi/better-scroll) | ![version2.0.3](https://img.shields.io/badge/npm-v2.0.3-blue) | 页面滚动插件             |
+| [lyric-parser](https://github.com/ustbhuangyi/lyric-parser)  | ![version1.0.1](https://img.shields.io/badge/npm-v1.0.1-blue) | 歌词解析插件             |
+| [sass](https://github.com/sass/sass)                         | ![最新版本](https://img.shields.io/badge/npm-latest-blue)    | CSS预处理器语言          |
 
 
 ### License
